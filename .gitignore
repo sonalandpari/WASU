@@ -1,5 +1,14 @@
 node_modules/
 dist/
-dist/
+build/
+.cache/
 *.log
-
+.env
+.env.local
+dev.db
+dev.db-journal
+contextflow.db
+contextflow.db-journal
+.DS_Store
+Thumbs.db
+coverage/

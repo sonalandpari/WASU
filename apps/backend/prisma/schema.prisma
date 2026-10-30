@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                    String                 @id @default(uuid())
+  name                  String
+  repositoryKey         String
+  description           String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  members               ProjectMember[]
+  timelineEvents        TimelineEvent[]
+  messages              ChatMessage[]
+  discussionLinks       DiscussionLink[]
+  commits               Commit[]
+  architectureSnapshots ArchitectureSnapshot[]
+
+  @@index([repositoryKey])
+}
+
+model ProjectMember {
+  id               String   @id @default(uuid())
+  projectId        String
+  userId           String
+  userName         String
+  role             String   @default("MEMBER")
+  activeFilePath   String?
+  connectionStatus String   @default("OFFLINE")
+  lastActiveAt     DateTime @default(now())
+  joinedAt         DateTime @default(now())
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@index([projectId, connectionStatus])
+  @@index([projectId, lastActiveAt])
+}
+
+model TimelineEvent {
+  id          String   @id @default(uuid())
+  projectId   String
+  type        String
+  actorId     String?
+  actorName   String?
+  occurredAt  DateTime @default(now())
+  payloadJson String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, occurredAt])
+  @@index([projectId, type])
+}
+
+model ChatMessage {
+  id        String           @id @default(uuid())
+  projectId String
+  userId    String
+  userName  String
+  content   String
+  createdAt DateTime         @default(now())
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  links     DiscussionLink[]
+
+  @@index([projectId, createdAt])
+}
+
+model DiscussionLink {
+  id            String      @id @default(uuid())
+  projectId     String
+  messageId     String
+  repositoryKey String
+  filePath      String
+  startLine     Int?
+  endLine       Int?
+  commitHash    String?
+  createdAt     DateTime    @default(now())
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  message       ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, filePath])
+  @@index([projectId, commitHash])
+  @@index([messageId])
+}
+
+model Commit {
+  id               String    @id @default(uuid())
+  projectId        String
+  repositoryKey    String
+  commitHash       String
+  shortHash        String
+  message          String
+  authorName       String?
+  commitTimestamp  DateTime?
+  linkedAt         DateTime  @default(now())
+  changedPathsJson String
+  project          Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, commitHash])
+  @@index([projectId, linkedAt])
+  @@index([repositoryKey, commitHash])
+}
+
+model ArchitectureSnapshot {
+  id             String   @id @default(uuid())
+  projectId      String
+  version        Int
+  scannerVersion String   @default("1.0.0")
+  graphJson      String
+  summary        String?
+  generatedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, version])
+  @@index([projectId, generatedAt])
+}
+
