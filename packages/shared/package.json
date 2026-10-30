@@ -1,0 +1,14 @@
+{
+  "name": "@contextflow/shared",
+  "version": "1.0.0",
+  "description": "Shared contracts and types for ContextFlow",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
+
