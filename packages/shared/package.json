@@ -1,0 +1,18 @@
+{
+  "name": "@contextflow/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript contracts, types, event schemas, and validation for ContextFlow",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
+
