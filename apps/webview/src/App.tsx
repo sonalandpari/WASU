@@ -9,6 +9,7 @@ import { DiscussionsView } from './discussion/DiscussionsView';
 import { ArchitectureView } from './architecture/ArchitectureView';
 import { ReportsView } from './reports/ReportsView';
 import { SettingsView } from './components/SettingsView';
+import { DevSimulationBar } from './components/common/DevSimulationBar';
 
 export const App: React.FC = () => {
   const { activeTab } = useAppStore();
@@ -53,6 +54,9 @@ export const App: React.FC = () => {
           {renderActiveTab()}
         </main>
       </div>
+
+      {/* Dev Simulation Bar for Live Real-Time Testing */}
+      <DevSimulationBar />
     </div>
   );
 };
