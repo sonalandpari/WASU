@@ -1,0 +1,20 @@
+{
+  "name": "contextflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ContextFlow - Workspace context layer connecting discussions, Git activity, architecture, and reporting",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run --workspaces --if-present build",
+    "test": "npm run --workspace=apps/backend test",
+    "start": "npm run --workspace=apps/backend start",
+    "dev": "npm run --workspace=apps/backend dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
+
