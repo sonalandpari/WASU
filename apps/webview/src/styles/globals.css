@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: #263442;
+  }
+
+  body {
+    background-color: #0B0F14;
+    color: #E8F0F6;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom scrollbar matching VS Code Arctic Aurora */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #263442;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3A4E63;
+  }
+}
+
+/* React Flow custom aurora styling */
+.react-flow__background {
+  background-color: #0B0F14 !important;
+}
+.react-flow__controls {
+  background-color: #151E28 !important;
+  border: 1px solid #263442 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background-color: #151E28 !important;
+  border-bottom: 1px solid #263442 !important;
+  color: #91A0AE !important;
+  fill: #91A0AE !important;
+}
+.react-flow__controls-button:hover {
+  background-color: #1A2532 !important;
+  color: #69D6E8 !important;
+  fill: #69D6E8 !important;
+}
+.react-flow__edge-path {
+  stroke: #3A4E63 !important;
+  stroke-width: 1.5;
+}
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #69D6E8 !important;
+  stroke-width: 2.5;
+}

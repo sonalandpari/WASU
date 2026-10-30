@@ -1,0 +1,13 @@
+{
+  "name": "contextflow-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:webview": "npm run dev --workspace=apps/webview",
+    "build:webview": "npm run build --workspace=apps/webview"
+  }
+}
