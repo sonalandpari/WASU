@@ -1,0 +1,278 @@
+{
+  "nodes": [
+    {
+      "id": "file:packages/architecture-engine/src/astExtractor.ts",
+      "label": "astExtractor.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/astExtractor.ts",
+      "metrics": {
+        "linesOfCode": 161,
+        "inDegree": 1,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/graphGenerator.ts",
+      "label": "graphGenerator.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/graphGenerator.ts",
+      "metrics": {
+        "linesOfCode": 207,
+        "inDegree": 0,
+        "outDegree": 1
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/index.ts",
+      "label": "index.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/index.ts",
+      "metrics": {
+        "linesOfCode": 6,
+        "inDegree": 0,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/reactFlowAdapter.ts",
+      "label": "reactFlowAdapter.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/reactFlowAdapter.ts",
+      "metrics": {
+        "linesOfCode": 98,
+        "inDegree": 0,
+        "outDegree": 1
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/resolver.ts",
+      "label": "resolver.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/resolver.ts",
+      "metrics": {
+        "linesOfCode": 70,
+        "inDegree": 1,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/scanner.ts",
+      "label": "scanner.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/scanner.ts",
+      "metrics": {
+        "linesOfCode": 84,
+        "inDegree": 1,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/tests/phase1.test.ts",
+      "label": "phase1.test.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/tests/phase1.test.ts",
+      "metrics": {
+        "linesOfCode": 97,
+        "inDegree": 0,
+        "outDegree": 3
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src/tests"
+      }
+    },
+    {
+      "id": "file:packages/architecture-engine/src/tests/phase2.test.ts",
+      "label": "phase2.test.ts",
+      "kind": "file",
+      "path": "packages/architecture-engine/src/tests/phase2.test.ts",
+      "metrics": {
+        "linesOfCode": 53,
+        "inDegree": 0,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/architecture-engine/src/tests"
+      }
+    },
+    {
+      "id": "file:packages/shared/dist/index.js",
+      "label": "index.js",
+      "kind": "file",
+      "path": "packages/shared/dist/index.js",
+      "metrics": {
+        "inDegree": 2,
+        "outDegree": 0
+      }
+    },
+    {
+      "id": "file:packages/shared/src/index.ts",
+      "label": "index.ts",
+      "kind": "file",
+      "path": "packages/shared/src/index.ts",
+      "metrics": {
+        "linesOfCode": 3,
+        "inDegree": 0,
+        "outDegree": 1
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/shared/src"
+      }
+    },
+    {
+      "id": "file:packages/shared/src/types.ts",
+      "label": "types.ts",
+      "kind": "file",
+      "path": "packages/shared/src/types.ts",
+      "metrics": {
+        "linesOfCode": 47,
+        "inDegree": 1,
+        "outDegree": 0
+      },
+      "data": {
+        "extension": ".ts",
+        "directory": "packages/shared/src"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge:file:packages/architecture-engine/src/graphGenerator.ts->file:packages/shared/dist/index.js",
+      "source": "file:packages/architecture-engine/src/graphGenerator.ts",
+      "target": "file:packages/shared/dist/index.js",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": [
+        "ArchitectureGraph",
+        "ArchitectureNode",
+        "ArchitectureEdge"
+      ]
+    },
+    {
+      "id": "edge:file:packages/architecture-engine/src/reactFlowAdapter.ts->file:packages/shared/dist/index.js",
+      "source": "file:packages/architecture-engine/src/reactFlowAdapter.ts",
+      "target": "file:packages/shared/dist/index.js",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": [
+        "ArchitectureGraph",
+        "ArchitectureNode",
+        "ArchitectureEdge"
+      ]
+    },
+    {
+      "id": "edge:file:packages/architecture-engine/src/tests/phase1.test.ts->file:packages/architecture-engine/src/astExtractor.ts",
+      "source": "file:packages/architecture-engine/src/tests/phase1.test.ts",
+      "target": "file:packages/architecture-engine/src/astExtractor.ts",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": [
+        "extractDependenciesFromSource"
+      ]
+    },
+    {
+      "id": "edge:file:packages/architecture-engine/src/tests/phase1.test.ts->file:packages/architecture-engine/src/resolver.ts",
+      "source": "file:packages/architecture-engine/src/tests/phase1.test.ts",
+      "target": "file:packages/architecture-engine/src/resolver.ts",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": [
+        "resolveDependencyPath"
+      ]
+    },
+    {
+      "id": "edge:file:packages/architecture-engine/src/tests/phase1.test.ts->file:packages/architecture-engine/src/scanner.ts",
+      "source": "file:packages/architecture-engine/src/tests/phase1.test.ts",
+      "target": "file:packages/architecture-engine/src/scanner.ts",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": [
+        "discoverWorkspaceFiles"
+      ]
+    },
+    {
+      "id": "edge:file:packages/shared/src/index.ts->file:packages/shared/src/types.ts",
+      "source": "file:packages/shared/src/index.ts",
+      "target": "file:packages/shared/src/types.ts",
+      "kind": "imports",
+      "isDynamic": false,
+      "isTypeOnly": false,
+      "specifiers": []
+    }
+  ],
+  "generatedAt": "2026-10-30T22:42:36.298Z",
+  "scannerVersion": "1.0.0",
+  "unresolvedImports": [
+    {
+      "sourceFile": "packages/architecture-engine/src/graphGenerator.ts",
+      "rawSpecifier": "./scanner.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/graphGenerator.ts",
+      "rawSpecifier": "./astExtractor.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/graphGenerator.ts",
+      "rawSpecifier": "./resolver.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/index.ts",
+      "rawSpecifier": "./scanner.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/index.ts",
+      "rawSpecifier": "./astExtractor.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/index.ts",
+      "rawSpecifier": "./resolver.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/index.ts",
+      "rawSpecifier": "./graphGenerator.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/index.ts",
+      "rawSpecifier": "./reactFlowAdapter.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/tests/phase2.test.ts",
+      "rawSpecifier": "../graphGenerator.js"
+    },
+    {
+      "sourceFile": "packages/architecture-engine/src/tests/phase2.test.ts",
+      "rawSpecifier": "../reactFlowAdapter.js"
+    }
+  ]
+}

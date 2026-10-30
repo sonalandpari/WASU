@@ -95,15 +95,14 @@ export interface MemberPresenceUpdatedPayload {
 
 export interface FileSavedPayload {
   filePath: string;
-  languageId?: string;
-  isDirty?: boolean;
-  changeCount?: number;
+  fileExtension?: string;
+  byteSize?: number;
+  linesCount?: number;
 }
 
 export interface BranchCreatedPayload {
   branchName: string;
   baseBranch?: string;
-  headCommit?: string;
 }
 
 export interface BranchSwitchedPayload {
@@ -113,20 +112,19 @@ export interface BranchSwitchedPayload {
 
 export interface FilesStagedPayload {
   stagedPaths: string[];
-  stageAction?: "stage" | "unstage";
+  count: number;
 }
 
 export interface CommitCreatedPayload {
   commitHash: string;
   shortHash: string;
   message: string;
-  authorName: string;
+  authorName?: string;
+  commitTimestamp?: string;
   changedPaths: string[];
-  commitTimestamp: string;
 }
 
 export interface CommitLinkedPayload {
-  repositoryKey: string;
   commitHash: string;
   shortHash: string;
   message: string;
@@ -138,53 +136,53 @@ export interface CommitLinkedPayload {
 
 export interface ChangesPushedPayload {
   branchName: string;
-  commitHashes: string[];
-  remoteName?: string;
+  commitHash?: string;
+  commitsCount?: number;
+  remote?: string;
 }
 
 export interface PullRequestLinkedPayload {
   prNumber: number;
-  prTitle: string;
-  prUrl: string;
-  sourceBranch: string;
-  targetBranch: string;
-  status: "OPEN" | "MERGED" | "CLOSED";
+  title: string;
+  url?: string;
+  sourceBranch?: string;
+  targetBranch?: string;
 }
 
 export interface ArchitectureUpdatedPayload {
-  snapshotId: string;
+  snapshotId?: string;
+  version?: number;
   nodeCount: number;
   edgeCount: number;
+  generatedAt: string;
   scannerVersion: string;
-  summary?: string;
 }
 
 export interface ArchitectureNodeModifiedPayload {
   nodeId: string;
   nodePath: string;
-  changeType: "added" | "modified" | "deleted";
-  previousEdges?: string[];
-  currentEdges?: string[];
+  modifiedAt: string;
+  moduleName?: string;
 }
 
-export interface EventPayloadMap {
-  MEMBER_JOINED: MemberJoinedPayload;
-  MEMBER_LEFT: MemberLeftPayload;
-  MEMBER_ACTIVE_FILE_CHANGED: MemberActiveFileChangedPayload;
-  MEMBER_PRESENCE_UPDATED: MemberPresenceUpdatedPayload;
-  FILE_SAVED: FileSavedPayload;
-  BRANCH_CREATED: BranchCreatedPayload;
-  BRANCH_SWITCHED: BranchSwitchedPayload;
-  FILES_STAGED: FilesStagedPayload;
-  COMMIT_CREATED: CommitCreatedPayload;
-  COMMIT_LINKED: CommitLinkedPayload;
-  CHANGES_PUSHED: ChangesPushedPayload;
-  PULL_REQUEST_LINKED: PullRequestLinkedPayload;
-  ARCHITECTURE_UPDATED: ArchitectureUpdatedPayload;
-  ARCHITECTURE_NODE_MODIFIED: ArchitectureNodeModifiedPayload;
-}
+export type TimelineEventPayload =
+  | MemberJoinedPayload
+  | MemberLeftPayload
+  | MemberActiveFileChangedPayload
+  | MemberPresenceUpdatedPayload
+  | FileSavedPayload
+  | BranchCreatedPayload
+  | BranchSwitchedPayload
+  | FilesStagedPayload
+  | CommitCreatedPayload
+  | CommitLinkedPayload
+  | ChangesPushedPayload
+  | PullRequestLinkedPayload
+  | ArchitectureUpdatedPayload
+  | ArchitectureNodeModifiedPayload
+  | Record<string, unknown>;
 
-export interface TimelineEvent<T = Record<string, unknown>> {
+export interface TimelineEvent<T = TimelineEventPayload> {
   id: string;
   projectId: string;
   type: ProjectEventType;
@@ -242,15 +240,23 @@ export interface CommitPayload {
 // ---------------------------------------------------------------------------
 
 export type ArchitectureNodeKind = "file" | "module" | "package";
+export type NodeKind = ArchitectureNodeKind;
 
 export interface ArchitectureNode {
   id: string;
   label: string;
   kind: ArchitectureNodeKind;
   path?: string;
+  moduleGroup?: string;
+  moduleName?: string;
   modifiedAt?: string;
   isModified?: boolean;
-  moduleName?: string;
+  metrics?: {
+    inDegree?: number;
+    outDegree?: number;
+    linesOfCode?: number;
+  };
+  data?: Record<string, unknown>;
 }
 
 export interface ArchitectureEdge {
@@ -258,6 +264,9 @@ export interface ArchitectureEdge {
   source: string;
   target: string;
   kind: "imports";
+  specifiers?: string[];
+  isDynamic?: boolean;
+  isTypeOnly?: boolean;
 }
 
 export interface ArchitectureGraph {
@@ -265,6 +274,17 @@ export interface ArchitectureGraph {
   edges: ArchitectureEdge[];
   generatedAt: string;
   scannerVersion: string;
+  unresolvedImports?: Array<{
+    sourceFile: string;
+    rawSpecifier: string;
+  }>;
+}
+
+export interface IncrementalUpdateResult {
+  graph: ArchitectureGraph;
+  changedNodeIds: string[];
+  removedNodeIds: string[];
+  addedNodeIds: string[];
 }
 
 export interface ArchitectureSnapshotRecord {
@@ -328,4 +348,3 @@ export interface ApiResponse<T = unknown> {
     details?: unknown;
   };
 }
-

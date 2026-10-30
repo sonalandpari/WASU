@@ -1,0 +1,18 @@
+{
+  "name": "@contextflow/architecture-engine",
+  "version": "1.0.0",
+  "description": "Deterministic AST dependency extraction and architecture graph engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/tests/**/*.test.js"
+  },
+  "dependencies": {
+    "@contextflow/shared": "*",
+    "typescript": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

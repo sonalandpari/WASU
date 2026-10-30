@@ -14,7 +14,7 @@
     "dev": "npm run --workspace=apps/backend dev"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^5.4.5"
   }
 }
-
