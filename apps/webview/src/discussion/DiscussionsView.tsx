@@ -124,6 +124,11 @@ export const DiscussionsView: React.FC = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
+          {discussions.length === 0 && (
+            <div className="p-4 text-center text-xs text-slate-400">
+              No discussions yet. Click <strong>+ New</strong> to start one!
+            </div>
+          )}
           {discussions.map((disc) => {
             const isSelected = selectedDisc?.id === disc.id;
             return (

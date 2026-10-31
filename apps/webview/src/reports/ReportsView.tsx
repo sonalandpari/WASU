@@ -92,7 +92,7 @@ export const ReportsView: React.FC = () => {
         const html = reportRef.current.innerHTML;
         const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1100">
           <foreignObject width="100%" height="100%">
-            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; background: #09090b; color: #f4f4f5; padding: 24px;">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; background: #e9eff6; color: #1e293b; padding: 24px;">
               ${html}
             </div>
           </foreignObject>
@@ -107,7 +107,7 @@ export const ReportsView: React.FC = () => {
       } else {
         setExportStatus('exporting', 50);
         const canvas = await html2canvas(reportRef.current, {
-          backgroundColor: '#09090b',
+          backgroundColor: '#e9eff6',
           scale: 2,
         });
 

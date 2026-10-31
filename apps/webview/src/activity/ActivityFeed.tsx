@@ -182,10 +182,12 @@ export const ActivityFeed: React.FC = () => {
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => <ActivityCard key={event.id} event={event} />)
         ) : (
-          <div className="h-64 flex flex-col items-center justify-center text-center p-6 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/30">
-            <Inbox className="w-7 h-7 text-zinc-600 mb-2" />
-            <h3 className="text-xs font-semibold text-zinc-200">No events found</h3>
-            <p className="text-[11px] text-zinc-400 mt-1 max-w-xs">
+          <div className="h-64 flex flex-col items-center justify-center text-center p-6 rounded-2xl neu-card shadow-neu-flat max-w-sm mx-auto my-auto">
+            <div className="p-3 rounded-2xl neu-surface-sm text-indigo-600 mb-3 shadow-neu-flat-sm">
+              <Inbox className="w-6 h-6" />
+            </div>
+            <h3 className="text-xs font-bold text-slate-800">No events found</h3>
+            <p className="text-[11px] text-slate-500 mt-1 max-w-xs leading-relaxed">
               Make a commit in your terminal or send a team message below to start your timeline.
             </p>
           </div>

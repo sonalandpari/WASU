@@ -30,6 +30,7 @@ const nodeTypes = {
 
 export const ArchitectureView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
   const {
     graph,
     graphViewMode,
@@ -40,7 +41,11 @@ export const ArchitectureView: React.FC = () => {
   } = useAppStore();
 
   const handleRefreshGraph = () => {
+    setIsScanning(true);
     vsCodeBridge.postMessage({ type: 'REFRESH_GRAPH' });
+    setTimeout(() => {
+      setIsScanning(false);
+    }, 900);
   };
 
   const handleOpenFile = (path: string) => {
@@ -49,6 +54,24 @@ export const ArchitectureView: React.FC = () => {
       payload: { path },
     });
   };
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      if (!graph?.nodes) return;
+      const updatedNodes = applyNodeChanges(changes, graph.nodes as any);
+      setGraph({ ...graph, nodes: updatedNodes });
+    },
+    [graph, setGraph]
+  );
+
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => {
+      if (!graph?.edges) return;
+      const updatedEdges = applyEdgeChanges(changes, graph.edges as any);
+      setGraph({ ...graph, edges: updatedEdges });
+    },
+    [graph, setGraph]
+  );
 
   const displayedNodes = useMemo(() => {
     if (!graph?.nodes) return [];
@@ -143,10 +166,11 @@ export const ArchitectureView: React.FC = () => {
 
             <button
               onClick={handleRefreshGraph}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl neu-btn text-xs text-slate-700 hover:text-indigo-600 font-medium transition-all cursor-pointer"
+              disabled={isScanning}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl neu-btn text-xs text-slate-700 hover:text-indigo-600 font-semibold transition-all cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Scan Repo</span>
+              <RefreshCw className={`w-3.5 h-3.5 text-indigo-600 ${isScanning ? 'animate-spin' : ''}`} />
+              <span>{isScanning ? 'Scanning AST...' : 'Scan Repo'}</span>
             </button>
           </div>
         </div>
@@ -159,6 +183,8 @@ export const ArchitectureView: React.FC = () => {
                 nodes={displayedNodes}
                 edges={graph.edges as any}
                 nodeTypes={nodeTypes}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
                 onNodeClick={(_, node) => setSelectedNodeId(node.id)}
                 fitView
               >
