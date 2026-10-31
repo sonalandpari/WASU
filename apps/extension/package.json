@@ -17,32 +17,32 @@
   "contributes": {
     "commands": [
       {
-        "command": "devsync.start",
+        "command": "rero.start",
         "title": "RERO: Connect and Start Collaboration"
       },
       {
-        "command": "devsync.refreshCommits",
+        "command": "rero.refreshCommits",
         "title": "RERO: Scan for Recent Git Commits"
       },
       {
-        "command": "devsync.openCommitDiff",
+        "command": "rero.openCommitDiff",
         "title": "RERO: Open Commit Diff"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "devsync-sidebar",
+          "id": "rero-sidebar",
           "title": "RERO",
           "icon": "resources/icon.svg"
         }
       ]
     },
     "views": {
-      "devsync-sidebar": [
+      "rero-sidebar": [
         {
           "type": "webview",
-          "id": "devsync.timelineView",
+          "id": "rero.timelineView",
           "name": "RERO Timeline & Chat"
         }
       ]
@@ -50,22 +50,22 @@
     "configuration": {
       "title": "RERO",
       "properties": {
-        "devsync.apiUrl": {
+        "rero.apiUrl": {
           "type": "string",
           "default": "http://localhost:3001",
           "description": "Backend API server URL"
         },
-        "devsync.projectId": {
+        "rero.projectId": {
           "type": "string",
           "default": "",
           "description": "RERO Project ID"
         },
-        "devsync.userId": {
+        "rero.userId": {
           "type": "string",
           "default": "",
           "description": "Current User ID"
         },
-        "devsync.userName": {
+        "rero.userName": {
           "type": "string",
           "default": "",
           "description": "Display Name"

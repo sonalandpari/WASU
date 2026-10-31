@@ -5,8 +5,8 @@ import { GitDetector } from "../git/gitDetector";
 import { MessageRouter } from "./messageRouter";
 import { ExtensionToWebviewMessage, ProjectEvent } from "@contextflow/shared";
 
-export class DevSyncWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = "devsync.timelineView";
+export class ReroWebviewProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = "rero.timelineView";
 
   private webviewView?: vscode.WebviewView;
   private extensionUri: vscode.Uri;
@@ -85,7 +85,7 @@ export class DevSyncWebviewProvider implements vscode.WebviewViewProvider {
       return `<!DOCTYPE html>
         <html>
           <body style="font-family: sans-serif; padding: 20px; color: #fff;">
-            <h3>DevSync Webview Loading...</h3>
+            <h3>RERO Webview Loading...</h3>
             <p>Please run <code>npm run build</code> to compile the Webview bundle.</p>
           </body>
         </html>`;

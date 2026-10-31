@@ -26,7 +26,7 @@ export class Uri {
       const u = new URL(value);
       return new Uri(u.protocol.replace(":", ""), u.host, u.pathname, u.search.replace(/^\?/, ""), u.hash);
     } catch {
-      return new Uri("devsync-git", "", value, "", "");
+      return new Uri("rero-git", "", value, "", "");
     }
   }
 

@@ -5,7 +5,7 @@ import * as path from "path";
 
 const execFileAsync = promisify(execFile);
 
-export const DEVSYNC_GIT_SCHEME = "devsync-git";
+export const RERO_GIT_SCHEME = "rero-git";
 
 /**
  * TextDocumentContentProvider that fetches file contents at a specific Git revision
@@ -23,18 +23,18 @@ export class GitRevisionContentProvider implements vscode.TextDocumentContentPro
   }
 
   /**
-   * Generates a devsync-git URI for a given file path and git reference.
+   * Generates a rero-git URI for a given file path and git reference.
    */
   public static createUri(filePath: string, ref: string): vscode.Uri {
     return vscode.Uri.from({
-      scheme: DEVSYNC_GIT_SCHEME,
+      scheme: RERO_GIT_SCHEME,
       path: filePath,
       query: JSON.stringify({ ref }),
     });
   }
 
   /**
-   * Parses the git reference and file path from a devsync-git URI.
+   * Parses the git reference and file path from a rero-git URI.
    */
   public static parseUri(uri: vscode.Uri): { filePath: string; ref: string } {
     let ref = "HEAD";
@@ -78,7 +78,7 @@ export class GitRevisionContentProvider implements vscode.TextDocumentContentPro
 
       return stdout;
     } catch (err: any) {
-      console.warn(`[DevSync GitProvider] Unable to get ${ref}:${filePath}:`, err.message);
+      console.warn(`[RERO GitProvider] Unable to get ${ref}:${filePath}:`, err.message);
       return "";
     }
   }

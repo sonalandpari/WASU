@@ -45,7 +45,7 @@ export class MessageRouter {
         if (commitHash) {
           await this.diffViewer.openCommitDiff(commitHash, filePath);
         } else {
-          vscode.window.showWarningMessage("DevSync: Missing commit hash to view diff.");
+          vscode.window.showWarningMessage("RERO: Missing commit hash to view diff.");
         }
         break;
       }
@@ -67,13 +67,13 @@ export class MessageRouter {
       }
 
       default:
-        console.log(`[DevSync MessageRouter] Received unhandled message type: ${message.type}`);
+        console.log(`[RERO MessageRouter] Received unhandled message type: ${message.type}`);
         break;
     }
   }
 
   private sendInitialState(): void {
-    const config = vscode.workspace.getConfiguration("devsync");
+    const config = vscode.workspace.getConfiguration("rero");
     const projectId = config.get<string>("projectId", "contextflow-demo");
     const currentBranch = "main";
     const repositoryName = path.basename(this.workspaceRoot) || "workspace";
@@ -111,8 +111,8 @@ export class MessageRouter {
         editor.selection = new vscode.Selection(pos, pos);
       }
     } catch (err: any) {
-      console.warn(`[DevSync MessageRouter] Could not open file ${filePath}:`, err.message);
-      vscode.window.showWarningMessage(`DevSync: Could not open file: ${filePath}`);
+      console.warn(`[RERO MessageRouter] Could not open file ${filePath}:`, err.message);
+      vscode.window.showWarningMessage(`RERO: Could not open file: ${filePath}`);
     }
   }
 }

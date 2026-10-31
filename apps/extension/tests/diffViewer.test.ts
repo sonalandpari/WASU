@@ -1,4 +1,4 @@
-import { GitRevisionContentProvider, DEVSYNC_GIT_SCHEME } from "../src/navigation/gitContentProvider";
+import { GitRevisionContentProvider, RERO_GIT_SCHEME } from "../src/navigation/gitContentProvider";
 import { DiffViewer } from "../src/navigation/diffViewer";
 import * as path from "path";
 
@@ -6,13 +6,13 @@ describe("GitRevisionContentProvider", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const provider = new GitRevisionContentProvider(repoRoot);
 
-  it("creates and parses devsync-git URIs correctly", () => {
+  it("creates and parses rero-git URIs correctly", () => {
     const filePath = "/home/user/project/src/index.ts";
     const ref = "72854eb";
 
     const uri = GitRevisionContentProvider.createUri(filePath, ref);
 
-    expect(uri.scheme).toBe(DEVSYNC_GIT_SCHEME);
+    expect(uri.scheme).toBe(RERO_GIT_SCHEME);
     expect(uri.path).toBe(filePath);
 
     const parsed = GitRevisionContentProvider.parseUri(uri);

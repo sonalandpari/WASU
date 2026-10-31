@@ -33,7 +33,7 @@ export class GitDetector implements vscode.Disposable {
 
     const isGit = await GitCli.isGitRepository(this.workspaceRoot);
     if (!isGit) {
-      console.log("[DevSync Git] Workspace is not inside a git repository:", this.workspaceRoot);
+      console.log("[RERO Git] Workspace is not inside a git repository:", this.workspaceRoot);
       return;
     }
 
@@ -45,7 +45,7 @@ export class GitDetector implements vscode.Disposable {
         if (gitApi && gitApi.repositories && gitApi.repositories.length > 0) {
           const repo = gitApi.repositories[0];
           this.attachToVsCodeGitRepo(repo);
-          console.log("[DevSync Git] Attached to VS Code Git extension API.");
+          console.log("[RERO Git] Attached to VS Code Git extension API.");
           return;
         } else if (gitApi) {
           // Listen for when repository is opened
@@ -56,7 +56,7 @@ export class GitDetector implements vscode.Disposable {
           );
         }
       } catch (err) {
-        console.warn("[DevSync Git] Failed to attach to VS Code Git API, using CLI fallback:", err);
+        console.warn("[RERO Git] Failed to attach to VS Code Git API, using CLI fallback:", err);
       }
     }
 
@@ -150,7 +150,7 @@ export class GitDetector implements vscode.Disposable {
       try {
         await callback(commit);
       } catch (err) {
-        console.error("[DevSync Git] Error in commit listener callback:", err);
+        console.error("[RERO Git] Error in commit listener callback:", err);
       }
     }
   }

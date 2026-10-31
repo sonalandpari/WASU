@@ -38,7 +38,7 @@ export class DiffViewer {
    */
   public async openCommitDiff(commitHash: string, targetFilePath?: string): Promise<boolean> {
     if (!commitHash || commitHash.trim().length === 0) {
-      vscode.window.showErrorMessage("DevSync: No commit hash provided.");
+      vscode.window.showErrorMessage("RERO: No commit hash provided.");
       return false;
     }
 
@@ -51,7 +51,7 @@ export class DiffViewer {
       const changedFiles = commitDetails?.changedPaths || [];
 
       if (changedFiles.length === 0) {
-        vscode.window.showWarningMessage(`DevSync: No changed files found in commit ${cleanHash.slice(0, 7)}.`);
+        vscode.window.showWarningMessage(`RERO: No changed files found in commit ${cleanHash.slice(0, 7)}.`);
         return false;
       }
 
@@ -95,8 +95,8 @@ export class DiffViewer {
       });
       return true;
     } catch (err: any) {
-      console.error("[DevSync DiffViewer] Error opening diff:", err);
-      vscode.window.showErrorMessage(`DevSync: Could not open diff: ${err.message}`);
+      console.error("[RERO DiffViewer] Error opening diff:", err);
+      vscode.window.showErrorMessage(`RERO: Could not open diff: ${err.message}`);
       return false;
     }
   }

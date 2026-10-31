@@ -12,7 +12,7 @@ export class ApiClient {
   }
 
   /**
-   * Registers a Git commit with the DevSync backend.
+   * Registers a Git commit with the RERO backend.
    */
   async registerCommit(projectId: string, commit: CommitPayload): Promise<ApiResponse<CommitPayload>> {
     try {
