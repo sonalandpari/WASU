@@ -72,6 +72,10 @@ describe("Project APIs", () => {
     // Project member count should now be 1
     const getRes = await request(app).get(`/projects/${projectId}`);
     expect(getRes.body.data.membersCount).toBe(1);
+
+    // Verify MEMBER_JOINED timeline event was recorded
+    const eventsRes = await request(app).get(`/projects/${projectId}/events`);
+    expect(eventsRes.body.data.some((e: any) => e.type === "MEMBER_JOINED" && e.actorId === "user-alice-123")).toBe(true);
   });
 
   it("returns 404 for nonexistent project", async () => {

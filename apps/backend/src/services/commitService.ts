@@ -1,7 +1,8 @@
 import { prisma } from "../db/prisma";
 import { AppError } from "../middleware/errorHandler";
-import { CommitPayload, DiscussionLink } from "@contextflow/shared";
+import { CommitPayload, DiscussionLink, SOCKET_SERVER_EVENTS } from "@contextflow/shared";
 import { ActivityService } from "./activityService";
+import { SocketServer } from "../realtime/socketServer";
 
 export class CommitService {
   /**
@@ -62,7 +63,7 @@ export class CommitService {
     });
 
     // Also record a timeline event for this commit
-    await ActivityService.createEvent(projectId, {
+    const commitEvent = await ActivityService.createEvent(projectId, {
       type: "COMMIT_LINKED",
       actorId: null,
       actorName: data.authorName || "Git",
@@ -77,6 +78,13 @@ export class CommitService {
         changedPaths: data.changedPaths,
       },
     });
+
+    try {
+      const io = SocketServer.getIO();
+      io.to(`project:${projectId}`).emit(SOCKET_SERVER_EVENTS.ACTIVITY_CREATED, commitEvent);
+    } catch {
+      // Socket.IO may not be active in test environments
+    }
 
     return {
       id: commit.id,

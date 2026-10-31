@@ -3,6 +3,7 @@ dist/
 build/
 .cache/
 *.log
+*.tsbuildinfo
 .env
 .env.local
 dev.db
@@ -12,3 +13,5 @@ contextflow.db-journal
 .DS_Store
 Thumbs.db
 coverage/
+apps/extension/media/
+*.vsix

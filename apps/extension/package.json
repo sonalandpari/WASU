@@ -1,0 +1,97 @@
+{
+  "name": "rero",
+  "displayName": "RERO",
+  "description": "In-editor team collaboration connecting chat, activity timeline, and Git commit tracking",
+  "version": "1.0.0",
+  "publisher": "rero",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sonalandpari/WASU.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "rero.start",
+        "title": "RERO: Connect and Start Collaboration"
+      },
+      {
+        "command": "rero.refreshCommits",
+        "title": "RERO: Scan for Recent Git Commits"
+      },
+      {
+        "command": "rero.openCommitDiff",
+        "title": "RERO: Open Commit Diff"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rero-sidebar",
+          "title": "RERO",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "rero-sidebar": [
+        {
+          "type": "webview",
+          "id": "rero.timelineView",
+          "name": "RERO Timeline & Chat"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RERO",
+      "properties": {
+        "rero.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:3001",
+          "description": "Backend API server URL"
+        },
+        "rero.projectId": {
+          "type": "string",
+          "default": "",
+          "description": "RERO Project ID"
+        },
+        "rero.userId": {
+          "type": "string",
+          "default": "",
+          "description": "Current User ID"
+        },
+        "rero.userName": {
+          "type": "string",
+          "default": "",
+          "description": "Display Name"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "mkdir -p media && (cp -r ../webview/dist/* media/ 2>/dev/null || true) && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "@contextflow/shared": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5"
+  }
+}
