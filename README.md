@@ -1,63 +1,139 @@
-# ContextFlow
+# RERO ⚡
+> **In-Editor Team Collaboration for VS Code**  
+> Connect real-time team chat, live activity timelines, and Git commit tracking with 1-click native diffs — without ever leaving your code editor.
 
-ContextFlow is an open-source VS Code extension that connects developer conversations with code changes, project architecture, and stakeholder reporting.
+---
 
-## Core features
+## 💡 Why RERO?
 
-1. **Live Activity Feed:** real-time team presence and events such as file saves, branch changes, staging, commits, and pushes.
-2. **3-Tier Deep-Linking:** Activity → Git-style diff → exact source location → original discussion.
-3. **Living Architecture Graph:** AST-based dependency visualization that updates as the workspace changes.
-4. **Stakeholder Export:** technical and executive reports exported as SVG, JPG, or PDF.
+Developers lose significant focus switching between code editors, browser tabs, Slack/Discord channels, and GitHub pull requests.
 
-## Product principles
+**RERO embeds team communication directly into VS Code:**
+- **Zero Context Switching:** Chat with teammates in the sidebar while keeping your code active in the editor.
+- **Instant Code Reviews:** When a teammate commits code, a live card appears in your timeline. Clicking **"Diff"** opens VS Code's native side-by-side diff viewer (`vscode.diff`) in $<100\text{ms}$ — no browser required.
+- **Automatic Project Context:** Automatically identifies who you are from local Git config, which repository and directory you are in, and generates a **1-click shareable Room Code** for teammates.
+- **Local SQLite Persistence:** All discussions and activity cards survive reboots and disconnects.
 
-- Connect conversation, code changes, and project understanding.
-- Keep core functionality deterministic; AI is optional.
-- Do not capture keystrokes or unnecessary source contents.
-- Do not modify source files or Git history.
-- Scan only the selected workspace.
-- Never invent dependency edges or line mappings.
+---
 
-## Proposed stack
+## 🚀 Quick Download & Installation
 
-- Extension: TypeScript, VS Code Extension API
-- Webview: React, TypeScript, Vite
-- Backend: Node.js, Express, TypeScript
-- Realtime: Socket.IO
-- Database: SQLite, Prisma
-- Git: VS Code Git API, Git CLI fallback
-- Parsing: TypeScript Compiler API
-- Graph: React Flow (`@xyflow/react`)
-- Export: SVG rendering, JPG image rendering, PDF generation/print workflow
-- Optional AI: Gemma through Ollama or a configured provider
+The RERO extension is pre-packaged as a self-contained `.vsix` binary ready to install on any laptop running VS Code:
 
-## Repository structure
+### Option A: Install via Terminal (Fastest)
+From the repository root, run:
+
+```bash
+code --install-extension apps/extension/rero-1.0.0.vsix
+```
+
+*(On fish shell: `code --install-extension apps/extension/rero-1.0.0.vsix`)*
+
+---
+
+### Option B: Install via VS Code Graphical Interface
+1. Send or copy `apps/extension/rero-1.0.0.vsix` (392 KB) to your laptop or teammates' laptops.
+2. In VS Code, open the **Extensions view** (`Ctrl+Shift+X` on Windows/Linux or `Cmd+Shift+X` on macOS).
+3. Click the **`...`** (Views and More Actions) menu in the top-right corner of the Extensions panel.
+4. Select **"Install from VSIX..."** from the dropdown menu.
+5. Browse and select `rero-1.0.0.vsix`.
+6. Reload the window: press `Ctrl+Shift+P` $\to$ type **Developer: Reload Window** $\to$ press **Enter**.
+7. Click the **RERO** icon on the left Activity Bar to open the collaboration sidebar!
+
+---
+
+## 👥 How to Run a Live Demo Across 2–3 Laptops
+
+Follow these 3 simple steps to demo live collaboration:
+
+### 1. Start the Real-Time Backend (Laptop 1)
+On the primary laptop:
+
+```bash
+# Starts Express, Socket.IO on port 3001, and local SQLite DB
+npm run dev --workspace=@contextflow/backend
+```
+
+### 2. Connect Teammates' Laptops (Laptop 2 & 3)
+1. Install `rero-1.0.0.vsix` on Laptop 2 and 3 using the steps above.
+2. Connect to the same Wi-Fi network and get Laptop 1's local IP (e.g. `192.168.1.45`), or create a quick tunnel on Laptop 1:
+   ```bash
+   npx localtunnel --port 3001
+   ```
+3. In VS Code on Laptop 2 & 3, open Settings (`Ctrl+,` or `settings.json`) and set:
+   ```json
+   {
+     "rero.apiUrl": "http://192.168.1.45:3001"
+   }
+   ```
+   *(Or set it to your tunnel URL).*
+
+### 3. Collaborate in Real Time!
+- **Chat:** Send a message in the bottom chat bar — it pops up instantly on both laptops!
+- **Auto-Join Event:** When Laptop 2 opens the workspace, a `"Member Joined"` announcement broadcasts to everyone.
+- **Git Commit Tracking:** Make any commit in your terminal:
+  ```bash
+  git commit -m "feat: testing live sync"
+  ```
+  Watch a commit card with the short hash, author, and clickable **"Diff"** button appear on all connected laptops in real time!
+
+---
+
+## 🖥️ Feature Tour
+
+| Feature | Description |
+|---|---|
+| **Developer Context Bar** | Instant visibility of **Who Am I**, active directory path, git repository name (`sonalandpari/WASU`), and branch (`main`). |
+| **1-Click Room Code** | Displays **`Room: WASU`** with a copy button so teammates can join the same live session instantly. |
+| **In-Editor Team Chat** | Dedicated team chat docked at the bottom of the timeline with real-time Socket.IO broadcasts. |
+| **Clickable Diff Viewer** | Click **"Diff"** on any timeline commit card to inspect side-by-side changes via native `vscode.diff`. |
+| **Architecture Blueprint** | AST-based dependency graph displaying modular dependencies across the codebase. |
+| **Intelligence Reports** | Generate and export executive and technical progress reports to PDF, SVG, or JPG. |
+
+---
+
+## 🛠️ Building & Packaging from Source
+
+If you want to build or modify RERO locally:
+
+```bash
+# 1. Install root dependencies
+npm install
+
+# 2. Build all workspaces (shared contracts, webview UI, and extension)
+npm run --workspace=packages/shared build
+npm run --workspace=@contextflow/webview build
+npm run --workspace=rero build
+
+# 3. Run all automated tests (40/40 tests)
+npm test --workspace=rero
+npm test --workspace=@contextflow/webview
+cd apps/backend && npm test -- --forceExit
+
+# 4. Package a new .vsix binary
+cd apps/extension
+npx @vscode/vsce package --no-dependencies
+```
+
+---
+
+## 📂 Repository Structure
 
 ```text
-contextflow/
+WASU/
 ├── apps/
-│   ├── extension/
-│   ├── webview/
-│   └── backend/
+│   ├── extension/          # VS Code Extension Host (Git detector, diff provider, VSIX package)
+│   ├── webview/            # React + Vite frontend sidebar (Timeline, Chat, Architecture)
+│   └── backend/            # Express, Socket.IO, Prisma ORM & SQLite database
 ├── packages/
-│   └── shared/
-├── docs/
-│   ├── PRD.md
-│   ├── FEATURES.md
-│   ├── ARCHITECTURE.md
-│   ├── DESIGN.md
-│   ├── FUNCTIONAL_REQUIREMENTS.md
-│   ├── TEAM_WORK_SPLIT.md
-│   └── AI_AGENT_PROMPTS.md
+│   ├── shared/             # TypeScript interfaces, event types, and API schemas
+│   └── architecture-engine # AST scanner and dependency graph generator
+├── docs/                   # Product requirements and technical integration guides
 └── README.md
 ```
 
-## MVP demonstration
+---
 
-1. Two VS Code instances join the same project.
-2. Presence and workspace activity appear in the feed.
-3. A commit appears and opens its diff.
-4. A changed diff line opens the corresponding source location.
-5. A linked discussion opens from the source location.
-6. The architecture graph updates after a file change.
-7. The user switches to Executive View and exports a report.
+## 📄 License
+
+This project is licensed under the [MIT License](apps/extension/LICENSE).
