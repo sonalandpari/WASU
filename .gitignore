@@ -14,3 +14,4 @@ contextflow.db-journal
 Thumbs.db
 coverage/
 apps/extension/media/
+*.vsix
