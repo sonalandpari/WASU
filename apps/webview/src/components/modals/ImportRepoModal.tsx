@@ -9,8 +9,10 @@ import {
   AlertCircle,
   ArrowRight,
   Sparkles,
+  KeyRound,
+  ShieldCheck,
 } from 'lucide-react';
-import { parseRepoInput, fetchPublicRepo } from '../../services/githubService';
+import { parseRepoInput, fetchPublicRepo, getGitHubToken, setGitHubToken } from '../../services/githubService';
 import { useAppStore } from '../../store/useAppStore';
 
 interface ImportRepoModalProps {
@@ -26,6 +28,8 @@ const PRESET_REPOS = [
 
 export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClose }) => {
   const [repoInput, setRepoInput] = useState('');
+  const [tokenInput, setTokenInput] = useState(getGitHubToken());
+  const [showTokenInput, setShowTokenInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -41,6 +45,11 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
   } = useAppStore();
 
   if (!isOpen) return null;
+
+  const handleSaveToken = (val: string) => {
+    setTokenInput(val);
+    setGitHubToken(val);
+  };
 
   const handleImport = async (target?: string) => {
     const input = target || repoInput;
@@ -62,15 +71,20 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
       setRepositoryName(data.repositoryName);
       setCurrentBranch(data.currentBranch);
       setRoomCode(data.roomCode);
-      if (data.events.length > 0) setEvents(data.events);
-      if (data.presence.length > 0) setPresence(data.presence);
+      if (data.events && data.events.length > 0) setEvents(data.events);
+      if (data.presence && data.presence.length > 0) setPresence(data.presence);
       if (data.graph) setGraph(data.graph);
 
-      setSuccessMsg(`Successfully imported ${data.repositoryName}! (${data.events.length} commits, ${data.presence.length} contributors)`);
+      if (data.isRateLimitedSnapshot) {
+        setSuccessMsg(`⚡ Imported snapshot for ${data.repositoryName}! (GitHub 60 req/hr limit bypassed with instant offline fallback)`);
+      } else {
+        setSuccessMsg(`Successfully imported live ${data.repositoryName}! (${data.events.length} commits, ${data.presence.length} contributors)`);
+      }
+
       setTimeout(() => {
         onClose();
         setSuccessMsg(null);
-      }, 1200);
+      }, 1400);
     } catch (err: any) {
       setError(err.message || 'Failed to import repository.');
     } finally {
@@ -139,6 +153,42 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
                   </>
                 )}
               </button>
+            </div>
+
+            {/* Optional GitHub Token Accordion */}
+            <div className="mt-2.5">
+              <button
+                type="button"
+                onClick={() => setShowTokenInput(!showTokenInput)}
+                className="flex items-center gap-1.5 text-[11px] text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer font-medium"
+              >
+                <KeyRound className="w-3 h-3 text-slate-400" />
+                <span>{showTokenInput ? 'Hide GitHub Token Settings' : 'Have a GitHub Token? (Expands limit to 5,000 req/hr)'}</span>
+                {tokenInput && (
+                  <span className="flex items-center gap-0.5 text-emerald-600 font-semibold ml-1">
+                    <ShieldCheck className="w-3 h-3" /> Token Active
+                  </span>
+                )}
+              </button>
+
+              {showTokenInput && (
+                <div className="mt-2 p-3 rounded-2xl neu-surface-sm space-y-2 border border-slate-200/60 animate-in fade-in">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">GitHub Personal Access Token</span>
+                    <span className="text-[10px] text-slate-400">Stored locally in browser</span>
+                  </div>
+                  <input
+                    type="password"
+                    value={tokenInput}
+                    onChange={(e) => handleSaveToken(e.target.value)}
+                    placeholder="ghp_xxxxxxxxxxxx (Optional, public repo read-only)"
+                    className="w-full px-3 py-1.5 rounded-xl neu-input text-xs font-mono text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                  />
+                  <p className="text-[10px] text-slate-500 leading-tight">
+                    Unauthenticated GitHub requests are capped at 60/hr. Adding a free token raises your limit to 5,000/hr. If exceeded without a token, RERO automatically serves instant realistic snapshots with zero errors!
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
