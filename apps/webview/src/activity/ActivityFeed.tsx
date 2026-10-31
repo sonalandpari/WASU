@@ -113,34 +113,34 @@ export const ActivityFeed: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-zinc-950 overflow-hidden">
-      {/* Sleek Minimal Toolbar */}
-      <div className="px-3 py-2 border-b border-zinc-800/80 flex items-center justify-between gap-2.5 bg-zinc-900/40 shrink-0">
+    <div className="flex-1 flex flex-col h-full bg-neu-bg overflow-hidden">
+      {/* Sleek Neumorphic Toolbar */}
+      <div className="px-3.5 py-2.5 border-b border-white/60 flex items-center justify-between gap-3 bg-neu-bg shrink-0">
         <div className="flex items-center gap-2 flex-1 max-w-sm">
           <div className="relative w-full">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter commits, messages, files..."
-              className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-700 rounded-md pl-8 pr-3 py-1 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none transition-colors"
+              className="w-full neu-input rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Minimal Filters */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {/* Event type filter */}
-          <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1">
-            <SlidersHorizontal className="w-3 h-3 text-zinc-400" />
+          <div className="flex items-center gap-1.5 neu-btn rounded-xl px-2.5 py-1.5 text-slate-700">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500" />
             <select
               value={selectedEventType}
               onChange={(e) => setSelectedEventType(e.target.value)}
-              className="bg-transparent text-xs text-zinc-200 focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs text-slate-700 font-medium focus:outline-none cursor-pointer"
             >
               {eventTypeOptions.map((opt) => (
-                <option key={opt.value} value={opt.value} className="bg-zinc-900 text-zinc-100">
+                <option key={opt.value} value={opt.value} className="bg-white text-slate-800">
                   {opt.label}
                 </option>
               ))}
@@ -149,16 +149,16 @@ export const ActivityFeed: React.FC = () => {
 
           {/* Member filter (if presence available) */}
           {Array.isArray(presence) && presence.length > 0 && (
-            <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1">
-              <User className="w-3 h-3 text-zinc-400" />
+            <div className="flex items-center gap-1.5 neu-btn rounded-xl px-2.5 py-1.5 text-slate-700">
+              <User className="w-3.5 h-3.5 text-slate-500" />
               <select
                 value={selectedMemberId}
                 onChange={(e) => setSelectedMemberId(e.target.value)}
-                className="bg-transparent text-xs text-zinc-200 focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs text-slate-700 font-medium focus:outline-none cursor-pointer"
               >
-                <option value="ALL" className="bg-zinc-900 text-zinc-100">All Members</option>
+                <option value="ALL" className="bg-white text-slate-800">All Members</option>
                 {presence.map((member) => (
-                  <option key={member.id} value={member.id} className="bg-zinc-900 text-zinc-100">
+                  <option key={member.id} value={member.id} className="bg-white text-slate-800">
                     {member.name}
                   </option>
                 ))}
@@ -169,7 +169,7 @@ export const ActivityFeed: React.FC = () => {
           {/* Refresh Action */}
           <button
             onClick={handleRefresh}
-            className="p-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-100 hover:border-zinc-700 transition-colors focus:outline-none"
+            className="p-2 rounded-xl neu-btn text-slate-500 hover:text-slate-800 transition-all focus:outline-none cursor-pointer"
             title="Scan for new commits & sync"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -178,7 +178,7 @@ export const ActivityFeed: React.FC = () => {
       </div>
 
       {/* Activity Timeline List */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+      <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-3">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => <ActivityCard key={event.id} event={event} />)
         ) : (
@@ -192,9 +192,9 @@ export const ActivityFeed: React.FC = () => {
         )}
       </div>
 
-      {/* Live In-Editor Team Chat Bar */}
-      <div className="p-2.5 border-t border-zinc-800/80 bg-zinc-900/80 backdrop-blur shrink-0">
-        <form onSubmit={handleSendChat} className="flex items-center gap-2">
+      {/* Live In-Editor Team Chat Bar (Neumorphic Dock) */}
+      <div className="p-3 border-t border-white/60 bg-neu-bg shrink-0 shadow-neu-flat-sm">
+        <form onSubmit={handleSendChat} className="flex items-center gap-2.5">
           <UserAvatar name={currentUser?.name} avatar={currentUser?.avatar} size="sm" />
 
           <div className="relative flex-1">
@@ -203,14 +203,14 @@ export const ActivityFeed: React.FC = () => {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder={`Message #${roomCode || 'WASU'} team... (Enter to send)`}
-              className="w-full bg-zinc-950 border border-zinc-800 focus:border-indigo-500/60 rounded-md px-3 py-1.5 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none transition-colors"
+              className="w-full neu-input rounded-xl px-3.5 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={!chatInput.trim()}
-            className="p-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600 text-white transition-all shadow-xs shrink-0 cursor-pointer focus:outline-none"
+            className="p-2.5 rounded-xl neu-btn-primary disabled:opacity-40 text-white transition-all shrink-0 cursor-pointer focus:outline-none shadow-neu-primary"
             title="Send Message (Enter)"
           >
             <Send className="w-3.5 h-3.5" />

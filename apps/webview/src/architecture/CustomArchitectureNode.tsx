@@ -9,13 +9,13 @@ export const CustomArchitectureNode: React.FC<NodeProps<CustomNodeType>> = ({ da
   const getNodeTypeBadge = () => {
     switch (data.type) {
       case 'component':
-        return { icon: Box, color: 'text-aurora-primary', bg: 'bg-aurora-primaryMuted' };
+        return { icon: Box, color: 'text-indigo-600', bg: 'bg-indigo-50 border-indigo-200' };
       case 'store':
-        return { icon: Database, color: 'text-aurora-secondaryAccent', bg: 'bg-aurora-secondaryMuted' };
+        return { icon: Database, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' };
       case 'type':
-        return { icon: Layers, color: 'text-aurora-warning', bg: 'bg-aurora-warningMuted' };
+        return { icon: Layers, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' };
       default:
-        return { icon: FileCode, color: 'text-aurora-textSecondary', bg: 'bg-aurora-card' };
+        return { icon: FileCode, color: 'text-slate-600', bg: 'bg-slate-100 border-slate-200' };
     }
   };
 
@@ -24,43 +24,43 @@ export const CustomArchitectureNode: React.FC<NodeProps<CustomNodeType>> = ({ da
 
   return (
     <div
-      className={`relative px-3 py-2 rounded-lg bg-aurora-card border min-w-[160px] max-w-[220px] transition-all duration-200 select-none shadow-md ${
+      className={`relative px-3.5 py-2.5 rounded-xl bg-neu-bg min-w-[170px] max-w-[230px] transition-all duration-200 select-none ${
         selected
-          ? 'border-aurora-primary ring-2 ring-aurora-primary/40 shadow-aurora-primary/10'
+          ? 'shadow-neu-inset ring-2 ring-indigo-500/60 border border-indigo-400'
           : data.modified
-          ? 'border-aurora-primary/70 ring-1 ring-aurora-primary/30'
-          : 'border-aurora-border hover:border-aurora-textMuted'
+          ? 'shadow-neu-flat ring-1 ring-emerald-500/50 border border-emerald-400'
+          : 'shadow-neu-flat border border-white/80 hover:shadow-neu-flat-lg'
       }`}
     >
       {/* Target and Source Handles */}
       <Handle
         type="target"
         position={Position.Top}
-        className="w-2 h-2 !bg-aurora-border hover:!bg-aurora-primary border border-aurora-card"
+        className="w-2.5 h-2.5 !bg-indigo-500 border-2 !border-white rounded-full shadow-sm"
       />
 
       {data.modified && (
-        <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-aurora-primary opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-aurora-primary"></span>
+        <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border border-white"></span>
         </span>
       )}
 
-      <div className="flex items-center gap-2 mb-1">
-        <div className={`p-1 rounded ${badge.bg} ${badge.color}`}>
+      <div className="flex items-center gap-2 mb-1.5">
+        <div className={`p-1.5 rounded-lg border ${badge.bg} ${badge.color} shadow-neu-badge`}>
           <Icon className="w-3.5 h-3.5" />
         </div>
         <div className="min-w-0">
-          <div className="text-xs font-semibold text-aurora-textPrimary truncate">
+          <div className="text-xs font-bold text-slate-800 truncate">
             {data.label}
           </div>
-          <div className="text-[10px] text-aurora-textMuted truncate">
+          <div className="text-[10px] text-slate-500 font-medium truncate">
             {data.module}
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-[10px] text-aurora-textMuted font-mono pt-1 border-t border-aurora-borderSubtle">
+      <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1.5 border-t border-slate-200/80 tabular-nums">
         <span>{data.imports.length} imports</span>
         <span>{data.exports.length} exports</span>
       </div>
@@ -68,7 +68,7 @@ export const CustomArchitectureNode: React.FC<NodeProps<CustomNodeType>> = ({ da
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-2 h-2 !bg-aurora-border hover:!bg-aurora-primary border border-aurora-card"
+        className="w-2.5 h-2.5 !bg-indigo-500 border-2 !border-white rounded-full shadow-sm"
       />
     </div>
   );

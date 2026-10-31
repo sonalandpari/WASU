@@ -84,37 +84,39 @@ export const ArchitectureView: React.FC = () => {
   }, [graph]);
 
   return (
-    <div className="flex-1 flex h-full bg-aurora-bg overflow-hidden">
+    <div className="flex-1 flex h-full bg-neu-bg overflow-hidden text-slate-800">
       {/* Central Graph Canvas & Controls */}
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Top Graph Controls Bar */}
-        <div className="p-3 border-b border-aurora-border flex items-center justify-between bg-aurora-secondary/70 z-10 select-none">
+        <div className="p-3 border-b border-white/70 flex items-center justify-between bg-neu-bg/95 z-10 select-none shadow-neu-flat-sm">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Network className="w-4 h-4 text-aurora-primary" />
-              <span className="text-xs font-semibold text-aurora-textPrimary">
+              <div className="p-1.5 rounded-lg neu-surface-sm text-indigo-600 shadow-neu-flat-sm">
+                <Network className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-bold text-slate-800">
                 Architecture Graph
               </span>
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center p-0.5 rounded-md bg-aurora-card border border-aurora-border">
+            <div className="flex items-center p-0.5 rounded-xl neu-input gap-0.5">
               <button
                 onClick={() => setGraphViewMode('technical')}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   graphViewMode === 'technical'
-                    ? 'bg-aurora-primary text-aurora-bg shadow-sm font-semibold'
-                    : 'text-aurora-textSecondary hover:text-aurora-textPrimary'
+                    ? 'neu-btn-primary shadow-neu-primary'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Technical View
               </button>
               <button
                 onClick={() => setGraphViewMode('executive')}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   graphViewMode === 'executive'
-                    ? 'bg-aurora-primary text-aurora-bg shadow-sm font-semibold'
-                    : 'text-aurora-textSecondary hover:text-aurora-textPrimary'
+                    ? 'neu-btn-primary shadow-neu-primary'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Executive View
@@ -125,25 +127,25 @@ export const ArchitectureView: React.FC = () => {
           <div className="flex items-center gap-2">
             {/* Search Nodes */}
             <div className="relative flex items-center">
-              <Search className="w-3.5 h-3.5 absolute left-2 text-zinc-500 pointer-events-none" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 text-slate-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search nodes..."
-                className="pl-7 pr-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500 w-36 transition-all"
+                className="pl-8 pr-2.5 py-1.5 rounded-xl neu-input text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none w-40 transition-all font-sans"
               />
             </div>
 
-            <span className="text-[11px] text-aurora-textMuted font-mono">
+            <span className="text-[11px] text-slate-500 font-mono tabular-nums px-2">
               {(graph as any)?.summary?.totalFiles || (graph as any)?.nodes?.length || 0} files • {(graph as any)?.summary?.totalDependencies || (graph as any)?.edges?.length || 0} imports
             </span>
 
             <button
               onClick={handleRefreshGraph}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl neu-btn text-xs text-slate-700 hover:text-indigo-600 font-medium transition-all cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5 text-indigo-600" />
               <span>Scan Repo</span>
             </button>
           </div>
@@ -151,7 +153,7 @@ export const ArchitectureView: React.FC = () => {
 
         {/* Canvas or Executive Cards */}
         {graphViewMode === 'technical' ? (
-          <div className="flex-1 w-full h-full relative">
+          <div className="flex-1 w-full h-full relative bg-neu-bg">
             {graph ? (
               <ReactFlow
                 nodes={displayedNodes}
@@ -160,24 +162,24 @@ export const ArchitectureView: React.FC = () => {
                 onNodeClick={(_, node) => setSelectedNodeId(node.id)}
                 fitView
               >
-                <Background color="#27272a" gap={16} size={1} />
-                <Controls className="!m-4" />
+                <Background color="#cbd5e1" gap={18} size={1.2} />
+                <Controls className="!m-4 !bg-neu-bg !rounded-xl !border-white/80 !shadow-neu-flat" />
               </ReactFlow>
             ) : (
-              <div className="flex items-center justify-center h-full text-aurora-textMuted text-xs">
+              <div className="flex items-center justify-center h-full text-slate-400 text-xs">
                 Scanning repository architecture...
               </div>
             )}
           </div>
         ) : (
           /* Executive View: High-level Module Breakdown */
-          <div className="flex-1 p-6 overflow-y-auto bg-aurora-bg">
-            <div className="max-w-4xl mx-auto space-y-4">
-              <div className="border border-aurora-border rounded-lg p-4 bg-aurora-card/50">
-                <h3 className="text-sm font-semibold text-aurora-textPrimary mb-1">
+          <div className="flex-1 p-6 overflow-y-auto bg-neu-bg">
+            <div className="max-w-4xl mx-auto space-y-5">
+              <div className="rounded-2xl p-5 neu-card">
+                <h3 className="text-sm font-bold text-slate-800 mb-1">
                   High-Level Architecture Blueprint
                 </h3>
-                <p className="text-xs text-aurora-textSecondary">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Simplified executive overview grouping project files into functional layers and operational domains.
                 </p>
               </div>
@@ -186,29 +188,31 @@ export const ArchitectureView: React.FC = () => {
                 {executiveModules.map((mod) => (
                   <div
                     key={mod.moduleName}
-                    className="p-4 rounded-lg bg-aurora-card border border-aurora-border hover:border-aurora-primary/50 transition-all shadow-sm"
+                    className="p-5 rounded-2xl neu-card hover:scale-[1.01] transition-all"
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
-                        <Box className="w-4 h-4 text-aurora-primary" />
-                        <span className="text-sm font-semibold text-aurora-textPrimary">
+                        <div className="p-1.5 rounded-lg neu-surface-sm text-indigo-600">
+                          <Box className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm font-bold text-slate-800">
                           {mod.moduleName}
                         </span>
                       </div>
                       {mod.modified && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-aurora-primaryMuted text-aurora-primary font-medium">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold shadow-neu-badge">
                           Active Changes
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-aurora-textSecondary mb-3">
+                    <div className="text-xs text-slate-500 mb-3 font-medium">
                       Contains {mod.files.length} indexed source components
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {mod.files.map((file) => (
                         <span
                           key={file}
-                          className="px-2 py-0.5 rounded bg-aurora-secondary border border-aurora-border text-[11px] font-mono text-aurora-textPrimary"
+                          className="px-2.5 py-1 rounded-lg neu-surface-sm text-[11px] font-mono text-slate-700 shadow-neu-flat-sm"
                         >
                           {file}
                         </span>
@@ -224,12 +228,12 @@ export const ArchitectureView: React.FC = () => {
 
       {/* Selected Node Details Drawer */}
       {selectedNode && graphViewMode === 'technical' && (
-        <div className="w-80 bg-aurora-secondary border-l border-aurora-border flex flex-col h-full select-none shrink-0">
-          <div className="p-3 border-b border-aurora-border flex items-center justify-between">
-            <span className="text-xs font-semibold text-aurora-textPrimary">Node Inspector</span>
+        <div className="w-80 bg-neu-bg border-l border-white/70 flex flex-col h-full select-none shrink-0 shadow-neu-flat">
+          <div className="p-3.5 border-b border-white/70 flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-800">Node Inspector</span>
             <button
               onClick={() => setSelectedNodeId(null)}
-              className="text-xs text-aurora-textMuted hover:text-aurora-textPrimary"
+              className="text-xs text-slate-500 hover:text-slate-800 px-2 py-0.5 rounded-lg neu-btn cursor-pointer"
             >
               Close
             </button>
@@ -242,38 +246,38 @@ export const ArchitectureView: React.FC = () => {
               const exports = (nodeData.exports || []) as string[];
               return (
                 <>
-                  <div>
-                    <div className="text-sm font-semibold text-aurora-textPrimary">{nodeData.label || selectedNode?.id}</div>
+                  <div className="p-3.5 rounded-xl neu-card">
+                    <div className="text-sm font-bold text-slate-800">{nodeData.label || selectedNode?.id}</div>
                     <button
                       onClick={() => handleOpenFile(nodeData.path)}
-                      className="flex items-center gap-1 text-[11px] font-mono text-aurora-primary hover:underline mt-1"
+                      className="flex items-center gap-1.5 text-[11px] font-mono text-indigo-600 hover:underline mt-1.5"
                     >
-                      <FileCode className="w-3 h-3" />
+                      <FileCode className="w-3.5 h-3.5" />
                       <span className="truncate">{nodeData.path}</span>
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="p-2 rounded bg-aurora-card border border-aurora-border">
-                      <span className="text-[10px] text-aurora-textMuted block">Module</span>
-                      <span className="font-semibold text-aurora-textPrimary">{nodeData.module || 'Default'}</span>
+                    <div className="p-3 rounded-xl neu-surface-sm">
+                      <span className="text-[10px] text-slate-500 block font-medium">Module</span>
+                      <span className="font-bold text-slate-800">{nodeData.module || 'Default'}</span>
                     </div>
-                    <div className="p-2 rounded bg-aurora-card border border-aurora-border">
-                      <span className="text-[10px] text-aurora-textMuted block">Type</span>
-                      <span className="font-semibold text-aurora-textPrimary capitalize">{nodeData.type || 'file'}</span>
+                    <div className="p-3 rounded-xl neu-surface-sm">
+                      <span className="text-[10px] text-slate-500 block font-medium">Type</span>
+                      <span className="font-bold text-slate-800 capitalize">{nodeData.type || 'file'}</span>
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-xs font-semibold text-aurora-textSecondary block mb-1.5">
+                    <span className="text-xs font-bold text-slate-700 block mb-2">
                       Imports ({imports.length})
                     </span>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       {imports.map((imp: string, idx: number) => (
                         <div
                           key={idx}
-                          className="px-2 py-1 rounded bg-aurora-card border border-aurora-border font-mono text-xs text-aurora-textSecondary"
+                          className="px-2.5 py-1.5 rounded-lg neu-surface-sm font-mono text-xs text-slate-600 shadow-neu-flat-sm truncate"
                         >
                           {imp}
                         </div>
@@ -282,14 +286,14 @@ export const ArchitectureView: React.FC = () => {
                   </div>
 
                   <div>
-                    <span className="text-xs font-semibold text-aurora-textSecondary block mb-1.5">
+                    <span className="text-xs font-bold text-slate-700 block mb-2">
                       Exports ({exports.length})
                     </span>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       {exports.map((exp: string, idx: number) => (
                         <div
                           key={idx}
-                          className="px-2 py-1 rounded bg-aurora-card border border-aurora-border font-mono text-xs text-aurora-primary"
+                          className="px-2.5 py-1.5 rounded-lg neu-surface-sm font-mono text-xs text-indigo-600 font-medium shadow-neu-flat-sm truncate"
                         >
                           {exp}
                         </div>

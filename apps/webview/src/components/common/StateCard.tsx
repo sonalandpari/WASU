@@ -106,20 +106,20 @@ export const StateCard: React.FC<StateCardProps> = ({
   const Icon = config.icon;
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center border border-dashed border-aurora-border rounded-xl bg-aurora-card/30 max-w-md mx-auto my-auto">
-      <div className={`p-3 rounded-full mb-3 ${config.iconBg} ${config.iconColor}`}>
-        <Icon className="w-6 h-6" />
+    <div className="flex flex-col items-center justify-center p-8 text-center rounded-2xl neu-card shadow-neu-flat max-w-md mx-auto my-auto border border-white/80">
+      <div className="p-4 rounded-2xl mb-4 neu-surface-sm text-indigo-600 shadow-neu-flat-sm">
+        <Icon className="w-7 h-7" />
       </div>
-      <h3 className="text-sm font-semibold text-aurora-textPrimary">
+      <h3 className="text-sm font-bold text-slate-800">
         {title || config.defaultTitle}
       </h3>
-      <p className="text-xs text-aurora-textSecondary mt-1 leading-relaxed">
+      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
         {description || config.defaultDesc}
       </p>
       {onAction && (
         <button
           onClick={onAction}
-          className="mt-4 px-3 py-1.5 rounded-md bg-aurora-card hover:bg-aurora-cardHover border border-aurora-border text-xs text-aurora-textPrimary hover:border-aurora-primary transition-colors font-medium shadow-sm"
+          className="mt-5 px-4 py-2 rounded-xl neu-btn text-xs text-slate-700 hover:text-indigo-600 font-semibold transition-all shadow-neu-flat-sm hover:scale-105 active:scale-95 cursor-pointer"
         >
           {actionLabel || config.btnText}
         </button>

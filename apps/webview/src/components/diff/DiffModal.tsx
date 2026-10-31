@@ -67,26 +67,26 @@ export const DiffModal: React.FC<DiffModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="w-full max-w-4xl bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-4xl neu-surface rounded-3xl shadow-neu-flat-lg overflow-hidden flex flex-col max-h-[90vh] text-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/60">
+        <div className="px-6 py-4 border-b border-white/60 flex items-center justify-between bg-neu-bg">
           <div className="flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="p-2 rounded-2xl neu-surface-sm text-emerald-600">
               <GitCommit className="w-5 h-5" />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/80">
                   {commitHash.slice(0, 7)}
                 </span>
-                <span className="text-xs text-zinc-400">• committed by</span>
-                <span className="text-xs font-semibold text-zinc-200">{authorName}</span>
+                <span className="text-xs text-slate-400">• committed by</span>
+                <span className="text-xs font-bold text-slate-800">{authorName}</span>
               </div>
-              <h3 className="text-sm font-semibold text-zinc-100 mt-1 truncate max-w-xl">
+              <h3 className="text-sm font-bold text-slate-900 mt-1 truncate max-w-xl">
                 {commitMessage}
               </h3>
             </div>
@@ -94,11 +94,11 @@ export const DiffModal: React.FC<DiffModalProps> = ({
 
           <div className="flex items-center gap-2">
             {/* View Mode Switcher */}
-            <div className="flex items-center bg-zinc-800/80 p-0.5 rounded-lg border border-zinc-700/60 text-xs">
+            <div className="flex items-center p-1 rounded-xl neu-input text-xs gap-1">
               <button
                 onClick={() => setViewMode('split')}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
-                  viewMode === 'split' ? 'bg-zinc-700 text-white font-medium' : 'text-zinc-400 hover:text-zinc-200'
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg transition-all font-semibold ${
+                  viewMode === 'split' ? 'neu-btn-primary shadow-neu-primary' : 'text-slate-500 hover:text-slate-800'
                 }`}
                 title="Side-by-Side Diff"
               >
@@ -107,8 +107,8 @@ export const DiffModal: React.FC<DiffModalProps> = ({
               </button>
               <button
                 onClick={() => setViewMode('unified')}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors ${
-                  viewMode === 'unified' ? 'bg-zinc-700 text-white font-medium' : 'text-zinc-400 hover:text-zinc-200'
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg transition-all font-semibold ${
+                  viewMode === 'unified' ? 'neu-btn-primary shadow-neu-primary' : 'text-slate-500 hover:text-slate-800'
                 }`}
                 title="Unified Diff"
               >
@@ -119,15 +119,15 @@ export const DiffModal: React.FC<DiffModalProps> = ({
 
             <button
               onClick={handleCopy}
-              className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 hover:text-white transition-colors"
+              className="p-2 rounded-xl neu-btn text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
               title="Copy Patch"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl neu-btn text-slate-500 hover:text-slate-900 transition-all cursor-pointer"
               title="Close (Esc)"
             >
               <X className="w-4 h-4" />
@@ -136,34 +136,34 @@ export const DiffModal: React.FC<DiffModalProps> = ({
         </div>
 
         {/* File Path Bar */}
-        <div className="px-6 py-2.5 bg-zinc-950/40 border-b border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+        <div className="px-6 py-2.5 bg-neu-bg/90 border-b border-white/60 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-1.5 font-mono">
-            <FileCode className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="text-zinc-200 font-semibold">{fileName}</span>
+            <FileCode className="w-3.5 h-3.5 text-indigo-600" />
+            <span className="text-slate-800 font-bold">{fileName}</span>
           </div>
-          <div className="flex items-center gap-2 text-[11px]">
-            <span className="text-emerald-400 font-bold">+7 lines</span>
-            <span className="text-rose-400 font-bold">-2 lines</span>
+          <div className="flex items-center gap-2 text-[11px] font-semibold">
+            <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">+7 lines</span>
+            <span className="text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">-2 lines</span>
           </div>
         </div>
 
         {/* Code Diff Body */}
-        <div className="flex-1 overflow-auto p-4 font-mono text-[11px] leading-relaxed select-text bg-zinc-950/90">
+        <div className="flex-1 overflow-auto p-4 font-mono text-[11px] leading-relaxed select-text bg-[#f3f7fc]">
           {mockDiffLines.map((line, idx) => (
             <div
               key={idx}
               className={`flex items-start py-0.5 px-2 rounded-sm ${
                 line.type === 'add'
-                  ? 'bg-emerald-950/35 text-emerald-300 border-l-2 border-emerald-500'
+                  ? 'bg-emerald-100/70 text-emerald-950 font-semibold border-l-2 border-emerald-500'
                   : line.type === 'remove'
-                  ? 'bg-rose-950/35 text-rose-300 border-l-2 border-rose-500'
-                  : 'text-zinc-400 hover:bg-white/5'
+                  ? 'bg-rose-100/70 text-rose-950 font-semibold border-l-2 border-rose-500'
+                  : 'text-slate-700 hover:bg-slate-200/50'
               }`}
             >
-              <span className="w-8 shrink-0 text-right pr-3 select-none text-zinc-600">
+              <span className="w-8 shrink-0 text-right pr-3 select-none text-slate-400">
                 {line.oldLine || ''}
               </span>
-              <span className="w-8 shrink-0 text-right pr-3 select-none text-zinc-600">
+              <span className="w-8 shrink-0 text-right pr-3 select-none text-slate-400">
                 {line.newLine || ''}
               </span>
               <span className="shrink-0 w-4 select-none font-bold text-center">
@@ -175,13 +175,13 @@ export const DiffModal: React.FC<DiffModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-zinc-800 bg-zinc-950/60 flex items-center justify-between text-xs text-zinc-400">
+        <div className="px-6 py-3.5 border-t border-white/60 bg-neu-bg flex items-center justify-between text-xs text-slate-500">
           <span className="text-[11px]">
-            In VS Code, clicking <strong>Diff</strong> opens <code className="text-indigo-400">vscode.diff</code> side-by-side natively.
+            In VS Code, clicking <strong>Diff</strong> opens <code className="text-indigo-600 font-semibold">vscode.diff</code> side-by-side natively.
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-colors"
+            className="px-4 py-2 rounded-xl neu-btn text-slate-800 text-xs font-bold transition-all cursor-pointer"
           >
             Close Viewer
           </button>

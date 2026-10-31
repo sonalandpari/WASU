@@ -3,74 +3,153 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    border-color: rgba(255, 255, 255, 0.08);
+  /* Light Neumorphic Default */
+  html:not(.dark), html.light {
+    --neu-bg: #e9eff6;
+    --neu-dark-shadow: #c2ccd9;
+    --neu-light-shadow: #ffffff;
+    --neu-text-head: #1e293b;
+    --neu-text-body: #334155;
+    --neu-text-muted: #64748b;
+    --neu-border: rgba(255, 255, 255, 0.7);
   }
 
   body {
-    background-color: #09090b;
+    background-color: #e9eff6;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.06) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.04) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
     background-attachment: fixed;
-    color: #f4f4f5;
+    color: #1e293b;
     user-select: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
   }
 
-  /* Focus visible accessibility ring */
-  button:focus-visible, a:focus-visible, input:focus-visible {
-    outline: 2px solid rgba(129, 140, 248, 0.6);
+  /* Dark theme override */
+  html.dark body {
+    background-color: #09090b;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.06) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 50%);
+    color: #f4f4f5;
+  }
+
+  /* Accessible focus visible ring */
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid rgba(79, 70, 229, 0.6);
     outline-offset: 1px;
   }
 
   /* Minimal sleek scrollbars */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
+    background: #c2ccd9;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.22);
+    background: #aab8ca;
   }
 }
 
-/* React Flow custom minimal styling */
+/* Custom Neumorphic Utility Classes */
+@layer components {
+  .neu-surface {
+    background-color: #e9eff6;
+    box-shadow: 6px 6px 14px #c2ccd9, -6px -6px 14px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  .neu-surface-sm {
+    background-color: #e9eff6;
+    box-shadow: 3px 3px 8px #c2ccd9, -3px -3px 8px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  .neu-btn {
+    background-color: #e9eff6;
+    box-shadow: 4px 4px 9px #c2ccd9, -4px -4px 9px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .neu-btn:hover {
+    box-shadow: 5px 5px 12px #b8c4d3, -5px -5px 12px #ffffff;
+    transform: translateY(-1px);
+  }
+  .neu-btn:active, .neu-btn.active {
+    box-shadow: inset 3px 3px 6px #c2ccd9, inset -3px -3px 6px #ffffff;
+    transform: translateY(0);
+  }
+
+  .neu-btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    box-shadow: 4px 4px 10px rgba(79, 70, 229, 0.35), -3px -3px 8px #ffffff;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .neu-btn-primary:hover {
+    box-shadow: 5px 5px 14px rgba(79, 70, 229, 0.45), -4px -4px 10px #ffffff;
+    transform: translateY(-1px);
+  }
+  .neu-btn-primary:active {
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(0);
+  }
+
+  .neu-input {
+    background-color: #e2eaf3;
+    box-shadow: inset 3px 3px 6px #c2ccd9, inset -3px -3px 6px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #1e293b;
+  }
+  .neu-input:focus {
+    box-shadow: inset 3px 3px 6px #b8c4d3, inset -3px -3px 6px #ffffff, 0 0 0 2px rgba(79, 70, 229, 0.3);
+  }
+
+  .neu-pill {
+    background-color: #e9eff6;
+    box-shadow: 2px 2px 5px #c2ccd9, -2px -2px 5px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* React Flow neumorphic styling */
 .react-flow__background {
-  background-color: #09090b !important;
+  background-color: #e9eff6 !important;
 }
 .react-flow__controls {
-  background-color: #141418 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-  border-radius: 8px !important;
+  background-color: #e9eff6 !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 5px 5px 12px #c2ccd9, -5px -5px 12px #ffffff !important;
+  border-radius: 12px !important;
   overflow: hidden;
 }
 .react-flow__controls-button {
-  background-color: #141418 !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #a1a1aa !important;
-  fill: #a1a1aa !important;
+  background-color: #e9eff6 !important;
+  border-bottom: 1px solid #d4deec !important;
+  color: #475569 !important;
+  fill: #475569 !important;
 }
 .react-flow__controls-button:hover {
-  background-color: #1c1c22 !important;
-  color: #818cf8 !important;
-  fill: #818cf8 !important;
+  background-color: #dfe7f1 !important;
+  color: #4f46e5 !important;
+  fill: #4f46e5 !important;
 }
 .react-flow__edge-path {
-  stroke: rgba(255, 255, 255, 0.15) !important;
+  stroke: #94a3b8 !important;
   stroke-width: 1.5;
 }
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: #818cf8 !important;
-  stroke-width: 2;
+  stroke: #4f46e5 !important;
+  stroke-width: 2.5;
 }

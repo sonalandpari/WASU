@@ -118,41 +118,41 @@ export const DevSimulationBar: React.FC = () => {
   };
 
   return (
-    <div className="bg-zinc-950/95 border-t border-aurora-border px-3 py-1.5 flex items-center justify-between text-xs select-none z-30">
+    <div className="bg-neu-bg border-t border-white/70 px-3.5 py-2 flex items-center justify-between text-xs select-none z-30 shadow-neu-flat-sm text-slate-800">
       <div className="flex items-center gap-2">
-        <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-semibold">
-          <Sparkles className="w-3 h-3 text-indigo-400" />
+        <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-indigo-600 font-bold neu-surface-sm px-2 py-0.5 rounded-lg">
+          <Sparkles className="w-3 h-3 text-indigo-600" />
           Simulator:
         </span>
         <button
           onClick={simulateFileSave}
-          className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-[11px] text-zinc-300 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neu-btn text-[11px] text-slate-700 hover:text-slate-900 transition-all cursor-pointer font-medium"
         >
-          <Save className="w-3 h-3 text-zinc-400" />
+          <Save className="w-3 h-3 text-slate-500" />
           <span>Save File</span>
         </button>
 
         <button
           onClick={simulateCommit}
-          className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-[11px] text-zinc-300 hover:text-emerald-400 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neu-btn text-[11px] text-emerald-700 hover:text-emerald-800 transition-all cursor-pointer font-medium"
         >
-          <GitCommit className="w-3 h-3 text-emerald-400" />
+          <GitCommit className="w-3 h-3 text-emerald-600" />
           <span>New Commit</span>
         </button>
 
         <button
           onClick={simulateTeammateActive}
-          className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-[11px] text-zinc-300 hover:text-indigo-400 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neu-btn text-[11px] text-indigo-700 hover:text-indigo-800 transition-all cursor-pointer font-medium"
         >
-          <Users className="w-3 h-3 text-indigo-400" />
+          <Users className="w-3 h-3 text-indigo-600" />
           <span>Teammate Active</span>
         </button>
 
         <button
           onClick={simulateArchUpdate}
-          className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-[11px] text-zinc-300 hover:text-purple-400 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neu-btn text-[11px] text-purple-700 hover:text-purple-800 transition-all cursor-pointer font-medium"
         >
-          <Network className="w-3 h-3 text-purple-400" />
+          <Network className="w-3 h-3 text-purple-600" />
           <span>Toggle Pulse</span>
         </button>
       </div>
@@ -168,20 +168,20 @@ export const DevSimulationBar: React.FC = () => {
                 : 'connected'
             )
           }
-          className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-[11px] text-zinc-400 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neu-btn text-[11px] text-slate-600 hover:text-slate-900 transition-all cursor-pointer font-medium"
           title="Cycle network state"
         >
           {connectionStatus === 'connected' ? (
-            <Wifi className="w-3 h-3 text-emerald-400" />
+            <Wifi className="w-3 h-3 text-emerald-600" />
           ) : (
-            <WifiOff className="w-3 h-3 text-rose-400" />
+            <WifiOff className="w-3 h-3 text-rose-600" />
           )}
           <span className="capitalize">{connectionStatus}</span>
         </button>
 
         <button
           onClick={toggleDevSimulator}
-          className="p-1 rounded text-zinc-500 hover:text-zinc-200 transition-colors"
+          className="p-1.5 rounded-lg neu-btn text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
           title="Hide Simulator Bar"
         >
           ✕

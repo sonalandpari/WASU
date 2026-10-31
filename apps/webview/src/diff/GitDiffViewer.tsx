@@ -67,29 +67,29 @@ export const GitDiffViewer: React.FC<GitDiffViewerProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-aurora-bg border border-aurora-border rounded-lg overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-neu-bg rounded-2xl overflow-hidden select-none neu-card shadow-neu-flat">
       {/* Commit Header */}
-      <div className="p-3 bg-aurora-secondary border-b border-aurora-border flex items-center justify-between">
+      <div className="p-3.5 bg-neu-bg border-b border-white/70 flex items-center justify-between">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="p-1 rounded bg-aurora-successMuted text-aurora-success border border-aurora-success/30">
+          <div className="p-1.5 rounded-lg neu-surface-sm text-emerald-600 shadow-neu-flat-sm">
             <GitCommit className="w-4 h-4" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-aurora-textPrimary truncate">
+              <span className="text-xs font-bold text-slate-800 truncate">
                 {commitMessage}
               </span>
               <button
                 onClick={handleCopyCommit}
-                className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-aurora-card border border-aurora-border text-[10px] font-mono text-aurora-textSecondary hover:text-aurora-primary transition-colors"
+                className="flex items-center gap-1 px-2 py-0.5 rounded-lg neu-btn text-[10px] font-mono text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer"
                 title="Copy commit SHA"
               >
                 <span>{commitHash.substring(0, 7)}</span>
-                {copied ? <Check className="w-2.5 h-2.5 text-aurora-success" /> : <Copy className="w-2.5 h-2.5" />}
+                {copied ? <Check className="w-2.5 h-2.5 text-emerald-600" /> : <Copy className="w-2.5 h-2.5" />}
               </button>
             </div>
-            <div className="text-[11px] text-aurora-textMuted mt-0.5">
-              <span>{author}</span> • <span>{timestamp}</span>
+            <div className="text-[11px] text-slate-500 mt-0.5">
+              <span>{author}</span> • <span className="font-mono tabular-nums">{timestamp}</span>
             </div>
           </div>
         </div>
@@ -97,50 +97,50 @@ export const GitDiffViewer: React.FC<GitDiffViewerProps> = ({
         {/* Action Button: View in Editor */}
         <button
           onClick={handleOpenEditor}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl neu-btn text-xs font-semibold text-slate-700 hover:text-indigo-600 transition-all cursor-pointer"
         >
-          <ExternalLink className="w-3.5 h-3.5" />
+          <ExternalLink className="w-3.5 h-3.5 text-indigo-600" />
           <span>View in Editor</span>
         </button>
       </div>
 
       {/* File Path Bar */}
-      <div className="px-3 py-1.5 bg-aurora-sidebar border-b border-aurora-border flex items-center justify-between text-xs">
-        <span className="font-mono text-aurora-textPrimary text-[11px]">{filePath}</span>
-        <div className="flex items-center gap-2 text-[10px] font-mono">
-          <span className="text-aurora-success">+4 lines</span>
-          <span className="text-aurora-error">-1 line</span>
+      <div className="px-3.5 py-2 bg-neu-bg/80 border-b border-white/70 flex items-center justify-between text-xs">
+        <span className="font-mono text-slate-700 font-semibold text-[11px]">{filePath}</span>
+        <div className="flex items-center gap-2.5 text-[10px] font-mono font-bold">
+          <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300 shadow-neu-badge">+4 lines</span>
+          <span className="text-rose-700 bg-rose-100 px-2 py-0.5 rounded-md border border-rose-300 shadow-neu-badge">-1 line</span>
         </div>
       </div>
 
       {/* Diff Table */}
-      <div className="flex-1 overflow-y-auto font-mono text-xs">
+      <div className="flex-1 overflow-y-auto font-mono text-xs bg-slate-50">
         {diffLines.map((line, idx) => {
           const isSelected = line.newLine ? selectedLines.includes(line.newLine) : false;
           return (
             <div
               key={idx}
               onClick={() => toggleLineSelect(line.newLine || line.oldLine)}
-              className={`flex items-stretch hover:bg-aurora-cardHover/70 cursor-pointer transition-colors ${
+              className={`flex items-stretch hover:bg-slate-200/60 cursor-pointer transition-colors ${
                 isSelected
-                  ? 'bg-aurora-primaryMuted/30 ring-1 ring-inset ring-aurora-primary/50'
+                  ? 'bg-indigo-100/70 ring-1 ring-inset ring-indigo-400 font-semibold'
                   : line.type === 'added'
-                  ? 'bg-aurora-successMuted/20 text-aurora-success'
+                  ? 'bg-emerald-50 text-emerald-900 border-l-2 border-emerald-500'
                   : line.type === 'deleted'
-                  ? 'bg-aurora-errorMuted/20 text-aurora-error'
-                  : 'text-aurora-textSecondary'
+                  ? 'bg-rose-50 text-rose-900 line-through opacity-80 border-l-2 border-rose-500'
+                  : 'text-slate-700'
               }`}
             >
               {/* Old Line # */}
-              <div className="w-10 px-2 py-0.5 text-right text-[10px] text-aurora-textMuted select-none border-r border-aurora-borderSubtle bg-aurora-sidebar/30">
+              <div className="w-10 px-2 py-0.5 text-right text-[10px] text-slate-400 select-none border-r border-slate-200 bg-slate-100/70 tabular-nums">
                 {line.oldLine || ''}
               </div>
               {/* New Line # */}
-              <div className="w-10 px-2 py-0.5 text-right text-[10px] text-aurora-textMuted select-none border-r border-aurora-borderSubtle bg-aurora-sidebar/30">
+              <div className="w-10 px-2 py-0.5 text-right text-[10px] text-slate-400 select-none border-r border-slate-200 bg-slate-100/70 tabular-nums">
                 {line.newLine || ''}
               </div>
               {/* Code Line Content */}
-              <div className="flex-1 px-3 py-0.5 font-mono whitespace-pre overflow-x-auto">
+              <div className="flex-1 px-3 py-0.5 font-mono whitespace-pre overflow-x-auto leading-relaxed">
                 {line.content}
               </div>
             </div>
@@ -149,10 +149,10 @@ export const GitDiffViewer: React.FC<GitDiffViewerProps> = ({
       </div>
 
       {/* Bottom Hint */}
-      <div className="px-3 py-1.5 bg-aurora-secondary border-t border-aurora-border text-[11px] text-aurora-textMuted flex items-center justify-between">
+      <div className="px-3.5 py-2 bg-neu-bg border-t border-white/70 text-[11px] text-slate-500 flex items-center justify-between">
         <span>Click on any line to select & link a discussion to that exact code location</span>
         {selectedLines.length > 0 && (
-          <span className="text-aurora-primary font-mono font-medium">
+          <span className="text-indigo-600 font-mono font-bold">
             Line {selectedLines.join(', ')} selected
           </span>
         )}

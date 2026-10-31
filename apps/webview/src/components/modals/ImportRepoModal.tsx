@@ -79,25 +79,25 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
+        className="w-full max-w-lg neu-surface rounded-3xl shadow-neu-flat-lg overflow-hidden text-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/60">
-          <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+        <div className="px-6 py-4 border-b border-white/60 flex items-center justify-between bg-neu-bg">
+          <div className="flex items-center gap-3">
+            <span className="p-2.5 rounded-2xl neu-surface-sm text-indigo-600">
               <GitFork className="w-5 h-5" />
             </span>
             <div>
-              <h3 className="text-sm font-bold text-zinc-100">Import Public GitHub Repo</h3>
-              <p className="text-[11px] text-zinc-400">Stream live commits, active contributors, and AST graphs</p>
+              <h3 className="text-sm font-bold text-slate-900">Import Public GitHub Repo</h3>
+              <p className="text-[11px] text-slate-500">Stream live commits, active contributors, and AST graphs</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl neu-btn text-slate-400 hover:text-slate-800 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -106,7 +106,7 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
         {/* Content */}
         <div className="p-6 space-y-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
+            <label className="text-xs font-bold text-slate-700 block mb-1.5">
               Repository Name or URL
             </label>
             <div className="flex items-center gap-2">
@@ -120,12 +120,12 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
                 placeholder="e.g. facebook/react or https://github.com/owner/repo"
                 disabled={isLoading}
                 onKeyDown={(e) => e.key === 'Enter' && handleImport()}
-                className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700/80 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition-colors"
+                className="flex-1 px-3.5 py-2.5 rounded-xl neu-input text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none font-mono transition-all"
               />
               <button
                 onClick={() => handleImport()}
                 disabled={isLoading || !repoInput.trim()}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white text-xs font-semibold shadow-md transition-all shrink-0 cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl neu-btn-primary disabled:opacity-40 text-white text-xs font-bold shadow-neu-primary transition-all shrink-0 cursor-pointer"
               >
                 {isLoading ? (
                   <>
@@ -144,10 +144,10 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
 
           {/* Quick Presets */}
           <div>
-            <span className="text-[11px] font-semibold text-zinc-400 block mb-2 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-400 block mb-2 uppercase tracking-wider">
               Try Sample Repositories:
             </span>
-            <div className="grid grid-cols-1 gap-1.5">
+            <div className="grid grid-cols-1 gap-2">
               {PRESET_REPOS.map((preset) => (
                 <button
                   key={preset.name}
@@ -156,15 +156,15 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
                     handleImport(preset.name);
                   }}
                   disabled={isLoading}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/60 hover:bg-zinc-800 border border-zinc-800/80 hover:border-zinc-700 text-left transition-colors group cursor-pointer"
+                  className="flex items-center justify-between p-3 rounded-2xl neu-surface-sm hover:neu-btn transition-all text-left group cursor-pointer"
                 >
                   <div className="truncate">
-                    <span className="text-xs font-mono font-semibold text-zinc-200 group-hover:text-indigo-400 transition-colors">
+                    <span className="text-xs font-mono font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
                       {preset.name}
                     </span>
-                    <p className="text-[10px] text-zinc-500 truncate">{preset.desc}</p>
+                    <p className="text-[10px] text-slate-500 truncate">{preset.desc}</p>
                   </div>
-                  <span className="text-[10px] text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded border border-zinc-700 shrink-0 ml-2 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-white px-2.5 py-1 rounded-lg shadow-neu-flat-sm shrink-0 ml-2 group-hover:neu-btn-primary group-hover:text-white transition-all">
                     Load
                   </span>
                 </button>
@@ -174,15 +174,15 @@ export const ImportRepoModal: React.FC<ImportRepoModalProps> = ({ isOpen, onClos
 
           {/* Status Message */}
           {error && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <div className="flex items-center gap-2 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs animate-in fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs animate-in fade-in">
-              <CheckCircle className="w-4 h-4 shrink-0 text-emerald-400" />
+            <div className="flex items-center gap-2 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs animate-in fade-in">
+              <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
               <span>{successMsg}</span>
             </div>
           )}

@@ -11,20 +11,20 @@ export const GlobalBanners: React.FC = () => {
     <div
       className={`px-4 py-2 border-b flex items-center justify-between text-xs select-none transition-colors ${
         connectionStatus === 'reconnecting'
-          ? 'bg-aurora-warningMuted/30 border-aurora-warning/40 text-aurora-warning'
-          : 'bg-aurora-errorMuted/30 border-aurora-error/40 text-aurora-error'
+          ? 'bg-amber-100/90 border-amber-300 text-amber-900'
+          : 'bg-rose-100/90 border-rose-300 text-rose-900'
       }`}
     >
       <div className="flex items-center gap-2">
         {connectionStatus === 'reconnecting' ? (
-          <RefreshCw className="w-4 h-4 animate-spin" />
+          <RefreshCw className="w-4 h-4 animate-spin text-amber-700" />
         ) : (
-          <WifiOff className="w-4 h-4" />
+          <WifiOff className="w-4 h-4 text-rose-700" />
         )}
-        <span className="font-medium">
+        <span className="font-semibold">
           {connectionStatus === 'reconnecting'
             ? 'Backend connection lost. Reconnecting to ContextFlow real-time gateway...'
-            : 'Disconnected from ContextFlow backend server. Changes will not sync in real-time.'}
+            : 'Disconnected from ContextFlow backend server. Running in standalone local simulation mode.'}
         </span>
       </div>
 
@@ -32,7 +32,7 @@ export const GlobalBanners: React.FC = () => {
         {connectionStatus === 'disconnected' && (
           <button
             onClick={() => setConnectionStatus('reconnecting')}
-            className="px-2 py-0.5 rounded bg-aurora-card border border-aurora-border text-aurora-textPrimary hover:border-aurora-primary transition-colors text-[11px]"
+            className="px-3 py-1 rounded-xl neu-btn text-slate-800 text-[11px] font-semibold hover:text-indigo-600 transition-all cursor-pointer"
           >
             Reconnect Now
           </button>
