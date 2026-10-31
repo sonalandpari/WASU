@@ -1,0 +1,93 @@
+{
+  "name": "rero",
+  "displayName": "RERO",
+  "description": "In-editor team collaboration connecting chat, activity timeline, and Git commit tracking",
+  "version": "1.0.0",
+  "publisher": "rero",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "devsync.start",
+        "title": "RERO: Connect and Start Collaboration"
+      },
+      {
+        "command": "devsync.refreshCommits",
+        "title": "RERO: Scan for Recent Git Commits"
+      },
+      {
+        "command": "devsync.openCommitDiff",
+        "title": "RERO: Open Commit Diff"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devsync-sidebar",
+          "title": "RERO",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "devsync-sidebar": [
+        {
+          "type": "webview",
+          "id": "devsync.timelineView",
+          "name": "RERO Timeline & Chat"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RERO",
+      "properties": {
+        "devsync.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:3001",
+          "description": "Backend API server URL"
+        },
+        "devsync.projectId": {
+          "type": "string",
+          "default": "",
+          "description": "RERO Project ID"
+        },
+        "devsync.userId": {
+          "type": "string",
+          "default": "",
+          "description": "Current User ID"
+        },
+        "devsync.userName": {
+          "type": "string",
+          "default": "",
+          "description": "Display Name"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "mkdir -p media && (cp -r ../webview/dist/* media/ 2>/dev/null || true) && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "@contextflow/shared": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5"
+  }
+}

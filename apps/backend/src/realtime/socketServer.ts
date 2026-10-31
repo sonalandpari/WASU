@@ -9,6 +9,8 @@ import {
 import { PresenceService } from "../services/presenceService";
 import { ActivityService } from "../services/activityService";
 import { DiscussionService } from "../services/discussionService";
+import { ProjectService } from "../services/projectService";
+import { prisma } from "../db/prisma";
 
 interface SocketSession {
   projectId?: string;
@@ -99,6 +101,13 @@ export class SocketServer {
         session.userId = userId;
         session.userName = userName;
 
+        // Ensure project membership record exists
+        const member = await ProjectService.joinProject(projectId, {
+          userId,
+          userName,
+          role: payload.role,
+        });
+
         // Update presence to ONLINE
         const presence = await PresenceService.updatePresence(projectId, {
           userId,
@@ -108,6 +117,22 @@ export class SocketServer {
 
         // Notify other room members of presence update
         socket.to(room).emit(SOCKET_SERVER_EVENTS.PRESENCE_UPDATED, presence);
+
+        // Record and broadcast MEMBER_JOINED activity event for new joins (not reconnects)
+        if (!lastEventOccurredAt) {
+          const joinEvent = await ActivityService.createEvent(projectId, {
+            type: "MEMBER_JOINED",
+            actorId: userId,
+            actorName: userName,
+            payload: {
+              userId,
+              userName,
+              role: member.role,
+              joinedAt: member.joinedAt,
+            },
+          });
+          socket.to(room).emit(SOCKET_SERVER_EVENTS.ACTIVITY_CREATED, joinEvent);
+        }
 
         // Fetch current online members and recent activity
         const onlineMembers = await PresenceService.getActivePresence(projectId);
