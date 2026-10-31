@@ -66,6 +66,14 @@ interface AppStore {
   exportStatus: 'idle' | 'exporting' | 'success' | 'error';
   setExportStatus: (status: 'idle' | 'exporting' | 'success' | 'error', progress?: number | null) => void;
 
+  // UI Toggles
+  showPresencePanel: boolean;
+  setShowPresencePanel: (show: boolean) => void;
+  togglePresencePanel: () => void;
+  showDevSimulator: boolean;
+  setShowDevSimulator: (show: boolean) => void;
+  toggleDevSimulator: () => void;
+
   // Initializer
   initFromState: (state: Partial<WebviewInitialState>) => void;
 }
@@ -73,6 +81,14 @@ interface AppStore {
 export const useAppStore = create<AppStore>((set) => ({
   activeTab: 'activity',
   setActiveTab: (tab) => set({ activeTab: tab }),
+
+  showPresencePanel: false,
+  setShowPresencePanel: (show) => set({ showPresencePanel: show }),
+  togglePresencePanel: () => set((state) => ({ showPresencePanel: !state.showPresencePanel })),
+
+  showDevSimulator: false,
+  setShowDevSimulator: (show) => set({ showDevSimulator: show }),
+  toggleDevSimulator: () => set((state) => ({ showDevSimulator: !state.showDevSimulator })),
 
   projectId: 'rero-demo',
   projectName: 'RERO',
