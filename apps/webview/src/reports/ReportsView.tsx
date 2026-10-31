@@ -13,6 +13,8 @@ import {
   Users,
   Sparkles,
   Loader2,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { generateGemmaSummary } from '../services/gemmaService';
 
@@ -38,6 +40,14 @@ export const ReportsView: React.FC = () => {
 
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [copiedBrief, setCopiedBrief] = useState(false);
+
+  const handleCopyBrief = () => {
+    if (!aiSummary) return;
+    navigator.clipboard.writeText(aiSummary);
+    setCopiedBrief(true);
+    setTimeout(() => setCopiedBrief(false), 2000);
+  };
 
   const handleGenerateAI = async () => {
     setIsGenerating(true);
@@ -289,24 +299,47 @@ export const ReportsView: React.FC = () => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleGenerateAI}
-                disabled={isGenerating}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all disabled:opacity-50 active:scale-95 cursor-pointer"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Synthesizing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Generate AI Brief</span>
-                  </>
+              <div className="flex items-center gap-2">
+                {aiSummary && (
+                  <button
+                    type="button"
+                    onClick={handleCopyBrief}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300 hover:text-white text-xs transition-colors"
+                    title="Copy AI Brief to clipboard"
+                  >
+                    {copiedBrief ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-[11px] text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span className="text-[11px]">Copy</span>
+                      </>
+                    )}
+                  </button>
                 )}
-              </button>
+
+                <button
+                  type="button"
+                  onClick={handleGenerateAI}
+                  disabled={isGenerating}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all disabled:opacity-50 active:scale-95 cursor-pointer"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Synthesizing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Generate AI Brief</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="text-xs text-zinc-300 font-mono whitespace-pre-line bg-zinc-950/60 p-3 rounded-lg border border-white/5 leading-relaxed">

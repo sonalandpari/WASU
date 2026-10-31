@@ -22,7 +22,7 @@ interface ActivityCardProps {
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({ event }) => {
-  const { setSelectedDiscussionId, setActiveTab } = useAppStore();
+  const { setSelectedDiscussionId, setActiveTab, openDiffModal } = useAppStore();
 
   const isChat = event.type === ('CHAT_MESSAGE' as any);
 
@@ -126,6 +126,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ event }) => {
     vsCodeBridge.postMessage({
       type: 'OPEN_COMMIT_DIFF',
       payload: { commitHash, changedPath: file, file },
+    });
+    openDiffModal({
+      commitHash: commitHash || event.metadata?.commitHash || '06570ef',
+      fileName: file || event.metadata?.file || 'apps/webview/src/services/gemmaService.ts',
+      authorName: event.userName || 'Developer',
+      commitMessage: event.description,
     });
   };
 

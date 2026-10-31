@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -29,6 +29,7 @@ const nodeTypes = {
 };
 
 export const ArchitectureView: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   const {
     graph,
     graphViewMode,
@@ -48,6 +49,16 @@ export const ArchitectureView: React.FC = () => {
       payload: { path },
     });
   };
+
+  const displayedNodes = useMemo(() => {
+    if (!graph?.nodes) return [];
+    if (!searchTerm.trim()) return graph.nodes as any[];
+    const term = searchTerm.toLowerCase();
+    return (graph.nodes as any[]).map((n: any) => ({
+      ...n,
+      selected: n.id === selectedNodeId || String(n.data?.label || '').toLowerCase().includes(term),
+    }));
+  }, [graph?.nodes, searchTerm, selectedNodeId]);
 
   const selectedNode = useMemo(() => {
     if (!graph || !selectedNodeId) return null;
@@ -112,13 +123,25 @@ export const ArchitectureView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Search Nodes */}
+            <div className="relative flex items-center">
+              <Search className="w-3.5 h-3.5 absolute left-2 text-zinc-500 pointer-events-none" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search nodes..."
+                className="pl-7 pr-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500 w-36 transition-all"
+              />
+            </div>
+
             <span className="text-[11px] text-aurora-textMuted font-mono">
               {(graph as any)?.summary?.totalFiles || (graph as any)?.nodes?.length || 0} files • {(graph as any)?.summary?.totalDependencies || (graph as any)?.edges?.length || 0} imports
             </span>
 
             <button
               onClick={handleRefreshGraph}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Scan Repo</span>
@@ -131,7 +154,7 @@ export const ArchitectureView: React.FC = () => {
           <div className="flex-1 w-full h-full relative">
             {graph ? (
               <ReactFlow
-                nodes={graph.nodes as any}
+                nodes={displayedNodes}
                 edges={graph.edges as any}
                 nodeTypes={nodeTypes}
                 onNodeClick={(_, node) => setSelectedNodeId(node.id)}

@@ -14,6 +14,7 @@ import {
   FolderGit2,
   Folder,
   User,
+  GitFork,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -34,6 +35,7 @@ export const Header: React.FC = () => {
     togglePresencePanel,
     showDevSimulator,
     toggleDevSimulator,
+    openImportModal,
   } = useAppStore();
 
   const [copiedRoom, setCopiedRoom] = useState(false);
@@ -111,6 +113,16 @@ export const Header: React.FC = () => {
 
         {/* Right Tools: Presence, Live Status, Controls */}
         <div className="flex items-center gap-2">
+          {/* Import Public GitHub Repo Button */}
+          <button
+            onClick={openImportModal}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-600/15 hover:bg-indigo-600/25 text-indigo-300 border border-indigo-500/35 text-xs font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xs cursor-pointer"
+            title="Import public GitHub repository"
+          >
+            <GitFork className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="hidden sm:inline">Import Repo</span>
+          </button>
+
           {/* Team Presence Toggle Button */}
           <button
             onClick={togglePresencePanel}

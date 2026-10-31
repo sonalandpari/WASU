@@ -9,9 +9,20 @@ import { ArchitectureView } from './architecture/ArchitectureView';
 import { ReportsView } from './reports/ReportsView';
 import { SettingsView } from './components/SettingsView';
 import { DevSimulationBar } from './components/common/DevSimulationBar';
+import { DiffModal } from './components/diff/DiffModal';
+import { ImportRepoModal } from './components/modals/ImportRepoModal';
 
 export const App: React.FC = () => {
-  const { activeTab, showPresencePanel, showDevSimulator } = useAppStore();
+  const {
+    activeTab,
+    showPresencePanel,
+    showDevSimulator,
+    isDiffModalOpen,
+    diffModalData,
+    closeDiffModal,
+    isImportModalOpen,
+    closeImportModal,
+  } = useAppStore();
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -50,6 +61,22 @@ export const App: React.FC = () => {
 
       {/* Dev Simulation Bar for Live Testing (Toggled via Header button) */}
       {showDevSimulator && <DevSimulationBar />}
+
+      {/* In-Browser Side-by-Side Diff Modal */}
+      <DiffModal
+        isOpen={isDiffModalOpen}
+        onClose={closeDiffModal}
+        commitHash={diffModalData.commitHash}
+        fileName={diffModalData.fileName}
+        authorName={diffModalData.authorName}
+        commitMessage={diffModalData.commitMessage}
+      />
+
+      {/* Import Public GitHub Repo Modal */}
+      <ImportRepoModal
+        isOpen={isImportModalOpen}
+        onClose={closeImportModal}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
   WebviewInitialState,
 } from '@contextflow/shared';
 import { vsCodeBridge } from '../services/vscodeBridge';
+import { SEED_EVENTS, SEED_PRESENCE, SEED_DISCUSSIONS } from './seedData';
 
 export type ActiveTab = 'activity' | 'architecture' | 'discussions' | 'reports' | 'settings';
 
@@ -18,16 +19,35 @@ interface AppStore {
   // Project & Developer Info
   projectId: string;
   projectName: string;
+  setProjectName: (name: string) => void;
   currentBranch: string;
+  setCurrentBranch: (branch: string) => void;
   workspacePath: string;
   repositoryName: string;
+  setRepositoryName: (name: string) => void;
   roomCode: string;
+  setRoomCode: (code: string) => void;
   currentUser: {
     id: string;
     name: string;
     avatar?: string;
     email?: string;
   };
+
+  // Modals
+  isDiffModalOpen: boolean;
+  diffModalData: {
+    commitHash?: string;
+    fileName?: string;
+    authorName?: string;
+    commitMessage?: string;
+  };
+  openDiffModal: (data?: { commitHash?: string; fileName?: string; authorName?: string; commitMessage?: string }) => void;
+  closeDiffModal: () => void;
+
+  isImportModalOpen: boolean;
+  openImportModal: () => void;
+  closeImportModal: () => void;
 
   // Connection
   connectionStatus: 'connected' | 'connecting' | 'disconnected' | 'reconnecting';
@@ -40,6 +60,7 @@ interface AppStore {
 
   // Activity Feed & Chat
   events: ProjectEvent[];
+  setEvents: (events: ProjectEvent[]) => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   selectedEventType: string;
@@ -97,27 +118,51 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   projectId: 'WASU',
   projectName: 'RERO',
+  setProjectName: (name) => set({ projectName: name }),
   currentBranch: 'main',
+  setCurrentBranch: (branch) => set({ currentBranch: branch }),
   workspacePath: '',
-  repositoryName: 'WASU',
+  repositoryName: 'sonalandpari/WASU',
+  setRepositoryName: (name) => set({ repositoryName: name }),
   roomCode: 'WASU',
+  setRoomCode: (code) => set({ roomCode: code }),
   currentUser: {
-    id: 'user-dev',
-    name: 'Developer',
-    avatar: 'D',
+    id: 'user-wafiq',
+    name: 'Wafiq (Lead)',
+    avatar: 'W',
   },
+
+  // Modals
+  isDiffModalOpen: false,
+  diffModalData: {},
+  openDiffModal: (data) =>
+    set({
+      isDiffModalOpen: true,
+      diffModalData: data || {
+        commitHash: '06570ef',
+        fileName: 'apps/webview/src/services/gemmaService.ts',
+        authorName: 'Wafiq (Lead)',
+        commitMessage: 'feat(ai): integrate Gemma 4 sprint intelligence digest and Vercel edge proxy',
+      },
+    }),
+  closeDiffModal: () => set({ isDiffModalOpen: false, diffModalData: {} }),
+
+  isImportModalOpen: false,
+  openImportModal: () => set({ isImportModalOpen: true }),
+  closeImportModal: () => set({ isImportModalOpen: false }),
 
   connectionStatus: 'connected',
   setConnectionStatus: (status) => set({ connectionStatus: status }),
 
-  presence: [],
+  presence: SEED_PRESENCE,
   setPresence: (presence) => set({ presence }),
   updateUserPresence: (item) =>
     set((state) => ({
       presence: state.presence.map((p) => (p.id === item.id ? { ...p, ...item } : p)),
     })),
 
-  events: [],
+  events: SEED_EVENTS,
+  setEvents: (events) => set({ events }),
   searchQuery: '',
   setSearchQuery: (q) => set({ searchQuery: q }),
   selectedEventType: 'ALL',
@@ -152,7 +197,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     });
   },
 
-  discussions: [],
+  discussions: SEED_DISCUSSIONS,
   selectedDiscussionId: null,
   setSelectedDiscussionId: (id) => set({ selectedDiscussionId: id }),
   addDiscussion: (discussion) => set((state) => ({ discussions: [discussion, ...state.discussions] })),
