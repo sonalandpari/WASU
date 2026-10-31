@@ -207,7 +207,7 @@ export const Header: React.FC = () => {
           {/* Workspace Directory */}
           <div
             className="flex items-center gap-1 text-zinc-400 hover:text-zinc-200 transition-colors cursor-default"
-            title={`Workspace directory: ${workspacePath || process.cwd()}`}
+            title={`Workspace directory: ${workspacePath || 'Active Workspace'}`}
           >
             <Folder className="w-3 h-3 text-zinc-500" />
             <span className="truncate max-w-[120px]">{directoryBasename}</span>
