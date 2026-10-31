@@ -137,7 +137,7 @@ export const ArchitectureView: React.FC = () => {
                 onNodeClick={(_, node) => setSelectedNodeId(node.id)}
                 fitView
               >
-                <Background color="#263442" gap={16} size={1} />
+                <Background color="#27272a" gap={16} size={1} />
                 <Controls className="!m-4" />
               </ReactFlow>
             ) : (

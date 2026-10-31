@@ -57,7 +57,7 @@ export const DiscussionsView: React.FC = () => {
 
     const newDisc: Discussion = {
       id: `disc-${Date.now()}`,
-      projectId: 'contextflow-demo',
+      projectId: useAppStore.getState().roomCode || 'WASU',
       title: newTitle.trim(),
       authorId: currentUser.id,
       authorName: currentUser.name,

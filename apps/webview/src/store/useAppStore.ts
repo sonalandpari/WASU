@@ -15,14 +15,18 @@ interface AppStore {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
 
-  // Project Info
+  // Project & Developer Info
   projectId: string;
   projectName: string;
   currentBranch: string;
+  workspacePath: string;
+  repositoryName: string;
+  roomCode: string;
   currentUser: {
     id: string;
     name: string;
     avatar?: string;
+    email?: string;
   };
 
   // Connection
@@ -34,7 +38,7 @@ interface AppStore {
   setPresence: (presence: UserPresence[]) => void;
   updateUserPresence: (presence: UserPresence) => void;
 
-  // Activity Feed
+  // Activity Feed & Chat
   events: ProjectEvent[];
   searchQuery: string;
   setSearchQuery: (q: string) => void;
@@ -43,6 +47,7 @@ interface AppStore {
   selectedMemberId: string;
   setSelectedMemberId: (id: string) => void;
   addEvent: (event: ProjectEvent) => void;
+  sendMessage: (content: string) => void;
 
   // Discussions
   discussions: Discussion[];
@@ -78,7 +83,7 @@ interface AppStore {
   initFromState: (state: Partial<WebviewInitialState>) => void;
 }
 
-export const useAppStore = create<AppStore>((set) => ({
+export const useAppStore = create<AppStore>((set, get) => ({
   activeTab: 'activity',
   setActiveTab: (tab) => set({ activeTab: tab }),
 
@@ -90,108 +95,29 @@ export const useAppStore = create<AppStore>((set) => ({
   setShowDevSimulator: (show) => set({ showDevSimulator: show }),
   toggleDevSimulator: () => set((state) => ({ showDevSimulator: !state.showDevSimulator })),
 
-  projectId: 'rero-demo',
+  projectId: 'WASU',
   projectName: 'RERO',
-  currentBranch: 'ali',
+  currentBranch: 'main',
+  workspacePath: '',
+  repositoryName: 'WASU',
+  roomCode: 'WASU',
   currentUser: {
-    id: 'user-ali',
-    name: 'Ali (UI Lead)',
-    avatar: 'A',
+    id: 'user-dev',
+    name: 'Developer',
+    avatar: 'D',
   },
 
   connectionStatus: 'connected',
   setConnectionStatus: (status) => set({ connectionStatus: status }),
 
-  presence: [
-    {
-      id: 'user-ali',
-      name: 'Ali (UI Lead)',
-      avatar: 'A',
-      online: true,
-      activeFile: 'apps/webview/src/App.tsx',
-      lastActive: 'Just now',
-    },
-    {
-      id: 'user-zalulu',
-      name: 'Master Zalulu',
-      avatar: 'Z',
-      online: true,
-      activeFile: 'backend/src/server.ts',
-      lastActive: '2m ago',
-    },
-    {
-      id: 'user-arch',
-      name: 'Graph Lead',
-      avatar: 'G',
-      online: true,
-      activeFile: 'scanner/src/dependencyEngine.ts',
-      lastActive: '5m ago',
-    },
-    {
-      id: 'user-ext',
-      name: 'Extension Lead',
-      avatar: 'E',
-      online: false,
-      activeFile: 'extension/src/git/gitWatcher.ts',
-      lastActive: '18m ago',
-    },
-  ],
+  presence: [],
   setPresence: (presence) => set({ presence }),
   updateUserPresence: (item) =>
     set((state) => ({
       presence: state.presence.map((p) => (p.id === item.id ? { ...p, ...item } : p)),
     })),
 
-  events: [
-    {
-      id: 'evt-1',
-      projectId: 'contextflow-demo',
-      type: 'BRANCH_SWITCHED',
-      userId: 'user-ali',
-      userName: 'Ali (UI Lead)',
-      userAvatar: 'A',
-      timestamp: '10:42 AM',
-      description: 'Switched branch to ali',
-      metadata: { branch: 'ali' },
-    },
-    {
-      id: 'evt-2',
-      projectId: 'contextflow-demo',
-      type: 'FILE_SAVED',
-      userId: 'user-ali',
-      userName: 'Ali (UI Lead)',
-      userAvatar: 'A',
-      timestamp: '10:45 AM',
-      description: 'Saved apps/webview/src/App.tsx',
-      metadata: { file: 'apps/webview/src/App.tsx', count: 4 },
-    },
-    {
-      id: 'evt-3',
-      projectId: 'contextflow-demo',
-      type: 'COMMIT_CREATED',
-      userId: 'user-zalulu',
-      userName: 'Master Zalulu',
-      userAvatar: 'Z',
-      timestamp: '10:50 AM',
-      description: 'feat(api): implement Socket.IO project room sync',
-      metadata: {
-        commitHash: '8b7f1a4',
-        commitMessage: 'feat(api): implement Socket.IO project room sync',
-        diffSummary: { added: 142, deleted: 18 },
-      },
-    },
-    {
-      id: 'evt-4',
-      projectId: 'contextflow-demo',
-      type: 'ARCHITECTURE_UPDATED',
-      userId: 'user-arch',
-      userName: 'Graph Lead',
-      userAvatar: 'G',
-      timestamp: '10:52 AM',
-      description: 'Dependency AST scan completed: 42 files indexed',
-      metadata: { nodeCount: 42, edgeCount: 88 },
-    },
-  ],
+  events: [],
   searchQuery: '',
   setSearchQuery: (q) => set({ searchQuery: q }),
   selectedEventType: 'ALL',
@@ -200,45 +126,34 @@ export const useAppStore = create<AppStore>((set) => ({
   setSelectedMemberId: (id) => set({ selectedMemberId: id }),
   addEvent: (event) => set((state) => ({ events: [event, ...state.events] })),
 
-  discussions: [
-    {
-      id: 'disc-1',
-      projectId: 'contextflow-demo',
-      title: 'Optimize React Flow node re-renders on file change',
-      authorId: 'user-ali',
-      authorName: 'Ali (UI Lead)',
-      authorAvatar: 'A',
-      createdAt: '10:15 AM',
-      updatedAt: '10:30 AM',
-      status: 'open',
-      filePath: 'apps/webview/src/architecture/ArchitectureView.tsx',
-      lineStart: 42,
-      lineEnd: 58,
-      commitHash: '8b7f1a4',
-      codeSnippet: `const onNodesChange = useCallback((changes: NodeChange[]) => {\n  setNodes((nds) => applyNodeChanges(changes, nds));\n}, []);`,
-      comments: [
-        {
-          id: 'c-1',
-          discussionId: 'disc-1',
-          userId: 'user-ali',
-          userName: 'Ali (UI Lead)',
-          userAvatar: 'A',
-          content: 'We should memoize custom nodes to prevent unnecessary layout recalculations on rapid file saves.',
-          createdAt: '10:15 AM',
-        },
-        {
-          id: 'c-2',
-          discussionId: 'disc-1',
-          userId: 'user-arch',
-          userName: 'Graph Lead',
-          userAvatar: 'G',
-          content: 'Agreed! The scanner batches AST updates with a 300ms debounce so the node IDs stay stable.',
-          createdAt: '10:30 AM',
-        },
-      ],
-    },
-  ],
-  selectedDiscussionId: 'disc-1',
+  sendMessage: (content: string) => {
+    const text = content.trim();
+    if (!text) return;
+    const { currentUser, roomCode } = get();
+    const newEvt: ProjectEvent = {
+      id: `msg-${Date.now()}`,
+      projectId: roomCode || 'WASU',
+      type: 'CHAT_MESSAGE' as any,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userAvatar: currentUser.avatar || currentUser.name[0],
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      description: text,
+    };
+    set((state) => ({ events: [newEvt, ...state.events] }));
+    vsCodeBridge.postMessage({
+      type: 'SEND_MESSAGE' as any,
+      payload: {
+        content: text,
+        projectId: roomCode || 'WASU',
+        userId: currentUser.id,
+        userName: currentUser.name,
+      },
+    });
+  },
+
+  discussions: [],
+  selectedDiscussionId: null,
   setSelectedDiscussionId: (id) => set({ selectedDiscussionId: id }),
   addDiscussion: (discussion) => set((state) => ({ discussions: [discussion, ...state.discussions] })),
   addComment: (discId, comment) =>
@@ -248,13 +163,8 @@ export const useAppStore = create<AppStore>((set) => ({
       ),
     })),
 
-  graph: ({
-    summary: {
-      totalFiles: 24,
-      totalModules: 5,
-      totalDependencies: 46,
-      lastUpdated: 'Just now',
-    },
+  // Architecture Graph
+  graph: {
     nodes: [
       {
         id: 'node-app',
@@ -265,65 +175,49 @@ export const useAppStore = create<AppStore>((set) => ({
           path: 'apps/webview/src/App.tsx',
           module: 'UI / Shell',
           type: 'component',
-          imports: ['Navigation', 'ActivityFeed', 'ArchitectureView'],
+          imports: ['ActivityFeed', 'Header'],
           exports: ['App'],
-          modified: true,
-          dependentCount: 0,
-          lineCount: 140,
-        },
-      },
-      {
-        id: 'node-nav',
-        type: 'custom',
-        position: { x: 80, y: 180 },
-        data: {
-          label: 'Navigation.tsx',
-          path: 'apps/webview/src/components/Navigation.tsx',
-          module: 'UI / Shell',
-          type: 'component',
-          imports: ['useAppStore', 'lucide-react'],
-          exports: ['Navigation'],
           modified: false,
-          dependentCount: 1,
-          lineCount: 95,
-        },
-      },
-      {
-        id: 'node-store',
-        type: 'custom',
-        position: { x: 250, y: 300 },
-        data: {
-          label: 'useAppStore.ts',
-          path: 'apps/webview/src/store/useAppStore.ts',
-          module: 'State Management',
-          type: 'store',
-          imports: ['zustand', '@contextflow/shared'],
-          exports: ['useAppStore'],
-          modified: false,
-          dependentCount: 5,
-          lineCount: 220,
+          dependentCount: 2,
+          lineCount: 75,
         },
       },
       {
         id: 'node-feed',
         type: 'custom',
-        position: { x: 420, y: 180 },
+        position: { x: 380, y: 160 },
         data: {
           label: 'ActivityFeed.tsx',
           path: 'apps/webview/src/activity/ActivityFeed.tsx',
           module: 'Activity',
           type: 'component',
-          imports: ['useAppStore', 'ActivityCard'],
+          imports: ['ActivityCard', 'useAppStore'],
           exports: ['ActivityFeed'],
           modified: false,
-          dependentCount: 1,
-          lineCount: 165,
+          dependentCount: 4,
+          lineCount: 140,
+        },
+      },
+      {
+        id: 'node-store',
+        type: 'custom',
+        position: { x: 250, y: 280 },
+        data: {
+          label: 'useAppStore.ts',
+          path: 'apps/webview/src/store/useAppStore.ts',
+          module: 'State Management',
+          type: 'store',
+          imports: ['zustand', 'vscodeBridge'],
+          exports: ['useAppStore'],
+          modified: false,
+          dependentCount: 6,
+          lineCount: 180,
         },
       },
       {
         id: 'node-shared',
         type: 'custom',
-        position: { x: 250, y: 440 },
+        position: { x: 250, y: 400 },
         data: {
           label: 'types.ts',
           path: 'packages/shared/src/types.ts',
@@ -338,13 +232,11 @@ export const useAppStore = create<AppStore>((set) => ({
       },
     ],
     edges: [
-      { id: 'e1', source: 'node-app', target: 'node-nav', animated: true },
       { id: 'e2', source: 'node-app', target: 'node-feed', animated: true },
-      { id: 'e3', source: 'node-nav', target: 'node-store' },
       { id: 'e4', source: 'node-feed', target: 'node-store' },
       { id: 'e5', source: 'node-store', target: 'node-shared' },
     ],
-  } as any),
+  } as any,
   graphViewMode: 'technical',
   setGraphViewMode: (mode) => set({ graphViewMode: mode }),
   selectedNodeId: 'node-app',
@@ -361,6 +253,8 @@ export const useAppStore = create<AppStore>((set) => ({
     set((state) => ({
       ...state,
       ...initialState,
+      events: initialState.events && initialState.events.length > 0 ? initialState.events : state.events,
+      presence: initialState.presence && initialState.presence.length > 0 ? initialState.presence : state.presence,
     })),
 }));
 
@@ -381,10 +275,25 @@ vsCodeBridge.onMessage((msg) => {
       store.setGraph(msg.payload);
       break;
     case 'DISCUSSIONS_UPDATED':
-      // Update discussions
+      if (Array.isArray(msg.payload)) {
+        useAppStore.setState({ discussions: msg.payload });
+      }
       break;
     case 'CONNECTION_STATUS_CHANGED':
       store.setConnectionStatus(msg.payload.status);
       break;
+    case 'GIT_INFO_CHANGED':
+      useAppStore.setState({
+        currentBranch: msg.payload.branch,
+        repositoryName: msg.payload.repositoryName,
+      });
+      break;
+    default:
+      break;
   }
 });
+
+// Signal extension host that webview is mounted and ready
+if (typeof window !== 'undefined') {
+  vsCodeBridge.postMessage({ type: 'READY' });
+}

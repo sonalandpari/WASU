@@ -492,16 +492,21 @@ export type WebviewToExtensionMessage =
   | { type: "CREATE_DISCUSSION"; payload: Partial<Discussion> }
   | { type: "REFRESH_GRAPH" }
   | { type: "REFRESH_ACTIVITY" }
+  | { type: "SEND_MESSAGE"; payload: { content: string; projectId?: string; userId?: string; userName?: string } }
   | { type: "EXPORT_REPORT"; payload: { format: "svg" | "jpg" | "pdf"; reportId: string } };
 
 export interface WebviewInitialState {
   projectId: string;
   projectName: string;
   currentBranch: string;
+  workspacePath?: string;
+  repositoryName?: string;
+  roomCode?: string;
   currentUser: {
     id: string;
     name: string;
     avatar?: string;
+    email?: string;
   };
   connectionStatus: "connected" | "connecting" | "disconnected" | "reconnecting";
   presence: UserPresence[];

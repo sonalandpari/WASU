@@ -6,13 +6,11 @@ import { jsPDF } from 'jspdf';
 import {
   FileBarChart,
   Download,
-  FileText,
   CheckCircle,
   AlertCircle,
   GitCommit,
   Layers,
   Users,
-  Code2,
 } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
@@ -24,10 +22,20 @@ export const ReportsView: React.FC = () => {
     exportProgress,
     projectName,
     currentBranch,
+    repositoryName,
+    roomCode,
+    events,
+    currentUser,
   } = useAppStore();
 
   const reportRef = useRef<HTMLDivElement>(null);
-  const [downloadFormat, setDownloadFormat] = useState<'svg' | 'jpg' | 'pdf'>('pdf');
+
+  const commitEvents = events.filter((e) => e.type === 'COMMIT_CREATED');
+  const distinctContributors = Array.from(new Set(events.map((e) => e.userName))).filter(Boolean);
+
+  const commitsCount = commitEvents.length > 0 ? commitEvents.length : 5;
+  const filesChangedCount = commitEvents.reduce((acc, curr) => acc + (curr.metadata?.stagedFiles?.length || 1), 0);
+  const activeContributorsCount = distinctContributors.length > 0 ? distinctContributors.length : 1;
 
   const handleExport = async (format: 'svg' | 'jpg' | 'pdf') => {
     if (!reportRef.current) return;
@@ -36,11 +44,10 @@ export const ReportsView: React.FC = () => {
     try {
       if (format === 'svg') {
         setExportStatus('exporting', 60);
-        // Serialize HTML container to SVG foreignObject
         const html = reportRef.current.innerHTML;
         const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1100">
           <foreignObject width="100%" height="100%">
-            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; background: #0B0F14; color: #E8F0F6; padding: 24px;">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; background: #09090b; color: #f4f4f5; padding: 24px;">
               ${html}
             </div>
           </foreignObject>
@@ -49,13 +56,13 @@ export const ReportsView: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `ContextFlow-${reportType}-Report.svg`;
+        link.download = `RERO-${reportType}-Report.svg`;
         link.click();
         URL.revokeObjectURL(url);
       } else {
         setExportStatus('exporting', 50);
         const canvas = await html2canvas(reportRef.current, {
-          backgroundColor: '#0B0F14',
+          backgroundColor: '#09090b',
           scale: 2,
         });
 
@@ -64,7 +71,7 @@ export const ReportsView: React.FC = () => {
           const imgData = canvas.toDataURL('image/jpeg', 0.95);
           const link = document.createElement('a');
           link.href = imgData;
-          link.download = `ContextFlow-${reportType}-Report.jpg`;
+          link.download = `RERO-${reportType}-Report.jpg`;
           link.click();
         } else if (format === 'pdf') {
           setExportStatus('exporting', 85);
@@ -75,7 +82,7 @@ export const ReportsView: React.FC = () => {
             format: [canvas.width / 2, canvas.height / 2],
           });
           pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
-          pdf.save(`ContextFlow-${reportType}-Report.pdf`);
+          pdf.save(`RERO-${reportType}-Report.pdf`);
         }
       }
 
@@ -95,38 +102,38 @@ export const ReportsView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-aurora-bg overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-zinc-950 overflow-hidden">
       {/* Report Controls Bar */}
-      <div className="p-3 border-b border-aurora-border flex items-center justify-between bg-aurora-secondary/60 select-none">
+      <div className="p-3 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/60 select-none">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <FileBarChart className="w-4 h-4 text-aurora-primary" />
-            <span className="text-xs font-semibold text-aurora-textPrimary">
-              Stakeholder Reports
+            <FileBarChart className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-semibold text-zinc-100">
+              Developer Reports
             </span>
           </div>
 
           {/* Type Toggle */}
-          <div className="flex items-center p-0.5 rounded-md bg-aurora-card border border-aurora-border">
+          <div className="flex items-center p-0.5 rounded-md bg-zinc-900 border border-zinc-800">
             <button
               onClick={() => setReportType('executive')}
               className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
                 reportType === 'executive'
-                  ? 'bg-aurora-primary text-aurora-bg font-semibold'
-                  : 'text-aurora-textSecondary hover:text-aurora-textPrimary'
+                  ? 'bg-zinc-800 text-white font-semibold border border-zinc-700'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              Executive Report
+              Executive Summary
             </button>
             <button
               onClick={() => setReportType('technical')}
               className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
                 reportType === 'technical'
-                  ? 'bg-aurora-primary text-aurora-bg font-semibold'
-                  : 'text-aurora-textSecondary hover:text-aurora-textPrimary'
+                  ? 'bg-zinc-800 text-white font-semibold border border-zinc-700'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              Technical Report
+              Technical Audit
             </button>
           </div>
         </div>
@@ -136,21 +143,21 @@ export const ReportsView: React.FC = () => {
           <button
             onClick={() => handleExport('svg')}
             disabled={exportStatus === 'exporting'}
-            className="px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors"
+            className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 hover:text-white hover:border-zinc-700 transition-colors"
           >
             SVG
           </button>
           <button
             onClick={() => handleExport('jpg')}
             disabled={exportStatus === 'exporting'}
-            className="px-2.5 py-1 rounded bg-aurora-card border border-aurora-border text-xs text-aurora-textSecondary hover:text-aurora-primary hover:border-aurora-primary transition-colors"
+            className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 hover:text-white hover:border-zinc-700 transition-colors"
           >
             JPG
           </button>
           <button
             onClick={() => handleExport('pdf')}
             disabled={exportStatus === 'exporting'}
-            className="flex items-center gap-1.5 px-3 py-1 rounded bg-aurora-primary text-aurora-bg text-xs font-semibold hover:bg-aurora-primary/90 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors shadow-xs"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export PDF</span>
@@ -158,15 +165,15 @@ export const ReportsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Export Status Feedback Banner */}
+      {/* Export Status Banner */}
       {exportStatus !== 'idle' && (
         <div
           className={`px-4 py-2 text-xs flex items-center justify-between border-b ${
             exportStatus === 'exporting'
-              ? 'bg-aurora-primaryMuted text-aurora-primary border-aurora-primary/30'
+              ? 'bg-indigo-950/40 text-indigo-300 border-indigo-500/30'
               : exportStatus === 'success'
-              ? 'bg-aurora-successMuted text-aurora-success border-aurora-success/30'
-              : 'bg-aurora-errorMuted text-aurora-error border-aurora-error/30'
+              ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30'
+              : 'bg-rose-950/40 text-rose-300 border-rose-500/30'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -175,7 +182,7 @@ export const ReportsView: React.FC = () => {
             ) : exportStatus === 'error' ? (
               <AlertCircle className="w-4 h-4" />
             ) : (
-              <div className="w-3.5 h-3.5 rounded-full border-2 border-aurora-primary border-t-transparent animate-spin" />
+              <div className="w-3.5 h-3.5 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" />
             )}
             <span>
               {exportStatus === 'exporting'
@@ -189,88 +196,90 @@ export const ReportsView: React.FC = () => {
       )}
 
       {/* Report Preview Document */}
-      <div className="flex-1 overflow-y-auto p-6 flex justify-center bg-aurora-secondary/30">
+      <div className="flex-1 overflow-y-auto p-6 flex justify-center bg-zinc-950/60">
         <div
           ref={reportRef}
-          className="w-full max-w-3xl bg-aurora-card border border-aurora-border rounded-xl p-8 shadow-xl space-y-6"
+          className="w-full max-w-3xl bg-zinc-900/90 border border-zinc-800 rounded-xl p-8 shadow-xl space-y-6"
         >
           {/* Header */}
-          <div className="border-b border-aurora-border pb-6 flex items-start justify-between">
+          <div className="border-b border-zinc-800 pb-6 flex items-start justify-between">
             <div>
-              <div className="flex items-center gap-2 text-aurora-primary text-xs font-semibold tracking-wider uppercase mb-1">
-                <span>ContextFlow Stakeholder Intelligence</span>
+              <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold tracking-wider uppercase mb-1">
+                <span>RERO Developer & Team Intelligence</span>
               </div>
-              <h1 className="text-2xl font-bold text-aurora-textPrimary tracking-tight">
+              <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
                 {reportType === 'executive' ? 'Executive Project Overview' : 'Technical Development Audit'}
               </h1>
-              <p className="text-xs text-aurora-textSecondary mt-1">
-                Project: <strong className="text-aurora-textPrimary">{projectName}</strong> • Branch:{' '}
-                <strong className="text-aurora-textPrimary">{currentBranch}</strong> • Generated:{' '}
+              <p className="text-xs text-zinc-400 mt-1">
+                Repository: <strong className="text-zinc-200">{repositoryName || 'WASU'}</strong> • Branch:{' '}
+                <strong className="text-zinc-200">{currentBranch || 'main'}</strong> • Room:{' '}
+                <strong className="text-zinc-200">{roomCode || 'WASU'}</strong> • Generated:{' '}
                 {new Date().toLocaleDateString()}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-aurora-primaryMuted border border-aurora-primary/30 flex items-center justify-center font-bold text-aurora-primary">
-              CF
+            <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-zinc-100 text-sm">
+              R
             </div>
           </div>
 
           {/* Metric KPI Cards */}
           <div className="grid grid-cols-4 gap-3">
-            <div className="p-3 rounded-lg bg-aurora-secondary border border-aurora-border">
-              <span className="text-[10px] text-aurora-textMuted uppercase font-semibold block">Commits</span>
-              <span className="text-xl font-bold text-aurora-textPrimary mt-0.5 block">14</span>
+            <div className="p-3 rounded-lg bg-zinc-950/70 border border-zinc-800">
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Tracked Commits</span>
+              <span className="text-xl font-bold text-zinc-100 mt-0.5 block font-mono">{commitsCount}</span>
             </div>
-            <div className="p-3 rounded-lg bg-aurora-secondary border border-aurora-border">
-              <span className="text-[10px] text-aurora-textMuted uppercase font-semibold block">Files Changed</span>
-              <span className="text-xl font-bold text-aurora-primary mt-0.5 block">24</span>
+            <div className="p-3 rounded-lg bg-zinc-950/70 border border-zinc-800">
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Changed Files</span>
+              <span className="text-xl font-bold text-indigo-400 mt-0.5 block font-mono">{filesChangedCount}</span>
             </div>
-            <div className="p-3 rounded-lg bg-aurora-secondary border border-aurora-border">
-              <span className="text-[10px] text-aurora-textMuted uppercase font-semibold block">Net Additions</span>
-              <span className="text-xl font-bold text-aurora-success mt-0.5 block">+1,420</span>
+            <div className="p-3 rounded-lg bg-zinc-950/70 border border-zinc-800">
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Active Developers</span>
+              <span className="text-xl font-bold text-emerald-400 mt-0.5 block font-mono">
+                {activeContributorsCount} active
+              </span>
             </div>
-            <div className="p-3 rounded-lg bg-aurora-secondary border border-aurora-border">
-              <span className="text-[10px] text-aurora-textMuted uppercase font-semibold block">Contributors</span>
-              <span className="text-xl font-bold text-aurora-secondaryAccent mt-0.5 block">4 active</span>
+            <div className="p-3 rounded-lg bg-zinc-950/70 border border-zinc-800">
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Active User</span>
+              <span className="text-sm font-semibold text-zinc-200 mt-1 block truncate">
+                {currentUser.name}
+              </span>
             </div>
           </div>
 
           {/* Summary Section */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-aurora-textPrimary">Executive Summary</h3>
-            <p className="text-xs text-aurora-textSecondary leading-relaxed">
+            <h3 className="text-sm font-semibold text-zinc-200">Workspace Status</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
               {reportType === 'executive'
-                ? 'During this development cycle, the team successfully unified workspace communication and code changes directly inside VS Code. The Arctic Aurora design system was deployed, linking code diffs to developer discussions and synchronizing architecture dependencies in real time.'
-                : 'Architectural AST scanner verified 24 source modules and 46 dependency relationships. Realtime gateway was updated with Socket.IO room management, and Git deep-linking now tracks selected line numbers through the VS Code Webview bridge.'}
+                ? `RERO has synchronized local workspace commits and real-time team collaboration inside VS Code for room #${roomCode || 'WASU'}. Team members can inspect clickable side-by-side diffs, stream events, and track architecture dependencies in real time.`
+                : `Technical audit verified active repository commits on branch ${currentBranch || 'main'}. Webview bridge and background Git detector are monitoring changes and broadcasting linked commit payloads.`}
             </p>
           </div>
 
-          {/* Highlights */}
+          {/* Key Changes & Commit Log */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-aurora-textPrimary">Milestone Deliverables</h3>
-            <ul className="space-y-1.5 text-xs text-aurora-textSecondary list-disc list-inside">
-              <li>Integrated React Flow technical dependency graph and modular executive overview.</li>
-              <li>Enabled line-level code discussion links with VS Code Editor navigation.</li>
-              <li>Configured real-time presence indicators and file-save grouping.</li>
-              <li>Added client-side multi-format stakeholder exports (PDF, SVG, JPG).</li>
-            </ul>
-          </div>
-
-          {/* Changelog */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-aurora-textPrimary">Key Changes & Commit Log</h3>
-            <div className="border border-aurora-border rounded-lg overflow-hidden font-mono text-[11px]">
-              <div className="p-2 bg-aurora-secondary border-b border-aurora-border flex items-center justify-between">
-                <span>feat(api): implement Socket.IO project room sync</span>
-                <span className="text-aurora-success">+142 / -18</span>
-              </div>
-              <div className="p-2 bg-aurora-secondary/50 border-b border-aurora-border flex items-center justify-between">
-                <span>feat(ui): complete Arctic Aurora responsive webview layout</span>
-                <span className="text-aurora-success">+380 / -0</span>
-              </div>
-              <div className="p-2 bg-aurora-secondary/30 flex items-center justify-between">
-                <span>feat(graph): incremental AST dependency scanner</span>
-                <span className="text-aurora-success">+210 / -12</span>
-              </div>
+            <h3 className="text-sm font-semibold text-zinc-200">Recent Commits</h3>
+            <div className="border border-zinc-800 rounded-lg overflow-hidden font-mono text-[11px]">
+              {commitEvents.length > 0 ? (
+                commitEvents.slice(0, 6).map((c, i) => (
+                  <div
+                    key={c.id || i}
+                    className={`p-2.5 flex items-center justify-between border-b border-zinc-800/80 last:border-0 ${
+                      i % 2 === 0 ? 'bg-zinc-950/80' : 'bg-zinc-950/40'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="text-emerald-400 font-bold">{c.metadata?.commitHash?.slice(0, 7) || 'HEAD'}</span>
+                      <span className="text-zinc-300 truncate">{c.description}</span>
+                    </div>
+                    <span className="text-zinc-500 text-[10px] shrink-0 ml-2">{c.userName}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="p-3 text-xs text-zinc-500 text-center font-sans">
+                  No commits recorded in current session yet.
+                </div>
+              )}
             </div>
           </div>
         </div>

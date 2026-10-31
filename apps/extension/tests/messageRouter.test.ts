@@ -25,11 +25,12 @@ describe("Webview Message Router", () => {
   it("handles READY message by sending initial connection and git status", async () => {
     await router.handleMessage({ type: "READY" });
 
-    expect(postedMessages.length).toBe(2);
-    expect(postedMessages[0].type).toBe("GIT_INFO_CHANGED");
-    expect(postedMessages[0].payload.branch).toBe("main");
-    expect(postedMessages[1].type).toBe("CONNECTION_STATUS_CHANGED");
-    expect(postedMessages[1].payload.status).toBe("connected");
+    expect(postedMessages.length).toBe(3);
+    expect(postedMessages[0].type).toBe("INIT_STATE");
+    expect(postedMessages[1].type).toBe("GIT_INFO_CHANGED");
+    expect(postedMessages[1].payload.branch).toBe("main");
+    expect(postedMessages[2].type).toBe("CONNECTION_STATUS_CHANGED");
+    expect(postedMessages[2].payload.status).toBe("connected");
   });
 
   it("handles OPEN_COMMIT_DIFF and forwards commitHash and path to diffViewer", async () => {
