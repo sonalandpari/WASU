@@ -16,6 +16,7 @@ import {
   User,
   GitFork,
 } from 'lucide-react';
+import { UserAvatar } from './common/UserAvatar';
 
 export const Header: React.FC = () => {
   const {
@@ -137,17 +138,21 @@ export const Header: React.FC = () => {
             <div className="flex items-center -space-x-1">
               {onlineMembers.length > 0 ? (
                 onlineMembers.slice(0, 3).map((m) => (
-                  <div
+                  <UserAvatar
                     key={m.id}
-                    className="w-4 h-4 rounded-full bg-zinc-700 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-zinc-200"
-                  >
-                    {m.avatar || m.name?.[0]?.toUpperCase() || 'U'}
-                  </div>
+                    name={m.name}
+                    avatar={m.avatar}
+                    size="xs"
+                    className="ring-1 ring-zinc-900"
+                  />
                 ))
               ) : (
-                <div className="w-4 h-4 rounded-full bg-zinc-700 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-zinc-200">
-                  {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
-                </div>
+                <UserAvatar
+                  name={currentUser?.name}
+                  avatar={currentUser?.avatar}
+                  size="xs"
+                  className="ring-1 ring-zinc-900"
+                />
               )}
             </div>
             <span className="text-[10px] font-mono tabular-nums text-zinc-300">
@@ -208,9 +213,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3 shrink-0">
           {/* Developer Identity */}
           <div className="flex items-center gap-1.5 text-zinc-300" title={`Logged in as ${currentUser?.name || 'Developer'}`}>
-            <div className="w-3.5 h-3.5 rounded-full bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-[9px] text-indigo-300 font-bold">
-              {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
-            </div>
+            <UserAvatar name={currentUser?.name} avatar={currentUser?.avatar} size="xs" />
             <span className="font-sans font-medium text-xs text-zinc-200">{currentUser?.name || 'Developer'}</span>
           </div>
 

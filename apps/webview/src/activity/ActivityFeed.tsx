@@ -14,6 +14,7 @@ import {
   Save,
 } from 'lucide-react';
 import { ProjectEvent } from '@contextflow/shared';
+import { UserAvatar } from '../components/common/UserAvatar';
 
 export const ActivityFeed: React.FC = () => {
   const {
@@ -194,9 +195,7 @@ export const ActivityFeed: React.FC = () => {
       {/* Live In-Editor Team Chat Bar */}
       <div className="p-2.5 border-t border-zinc-800/80 bg-zinc-900/80 backdrop-blur shrink-0">
         <form onSubmit={handleSendChat} className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-200 shrink-0">
-            {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
-          </div>
+          <UserAvatar name={currentUser?.name} avatar={currentUser?.avatar} size="sm" />
 
           <div className="relative flex-1">
             <input

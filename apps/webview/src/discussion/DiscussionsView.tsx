@@ -13,6 +13,7 @@ import {
   CornerDownRight,
 } from 'lucide-react';
 import { Discussion } from '@contextflow/shared';
+import { UserAvatar } from '../components/common/UserAvatar';
 
 export const DiscussionsView: React.FC = () => {
   const {
@@ -235,12 +236,15 @@ export const DiscussionsView: React.FC = () => {
               <div className="w-full lg:w-96 flex flex-col bg-aurora-secondary/20">
                 <div className="flex-1 overflow-y-auto p-3 space-y-3">
                   {selectedDisc.comments.map((comment) => (
-                    <div key={comment.id} className="p-3 rounded-lg bg-aurora-card border border-aurora-border">
+                    <div key={comment.id} className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 shadow-sm">
                       <div className="flex items-center justify-between text-xs mb-1.5">
-                        <span className="font-semibold text-aurora-textPrimary">{comment.userName}</span>
-                        <span className="text-[10px] text-aurora-textMuted font-mono">{comment.createdAt}</span>
+                        <div className="flex items-center gap-1.5">
+                          <UserAvatar name={comment.userName} avatar={comment.userAvatar} size="xs" />
+                          <span className="font-semibold text-zinc-100">{comment.userName}</span>
+                        </div>
+                        <span className="text-[10px] text-zinc-500 font-mono">{comment.createdAt}</span>
                       </div>
-                      <p className="text-xs text-aurora-textSecondary leading-relaxed break-words">
+                      <p className="text-xs text-zinc-300 leading-relaxed break-words pl-5">
                         {comment.content}
                       </p>
                     </div>

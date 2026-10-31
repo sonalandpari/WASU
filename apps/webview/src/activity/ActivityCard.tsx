@@ -16,6 +16,7 @@ import {
   MessageSquare,
   Eye,
 } from 'lucide-react';
+import { UserAvatar } from '../components/common/UserAvatar';
 
 interface ActivityCardProps {
   event: ProjectEvent;
@@ -157,15 +158,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ event }) => {
       <div className="flex items-start justify-between gap-3">
         {/* Left: Avatar & Meta */}
         <div className="flex items-start gap-2.5 min-w-0 flex-1">
-          <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 border ${
-              isChat
-                ? 'bg-indigo-600/30 text-indigo-300 border-indigo-500/30'
-                : 'bg-zinc-800 text-zinc-200 border-zinc-700'
-            }`}
-          >
-            {event?.userAvatar || event?.userName?.[0]?.toUpperCase() || 'G'}
-          </div>
+          <UserAvatar
+            name={event?.userName}
+            avatar={event?.userAvatar}
+            size="md"
+            className="mt-0.5"
+          />
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">

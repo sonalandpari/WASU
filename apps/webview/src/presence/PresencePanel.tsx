@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { vsCodeBridge } from '../services/vscodeBridge';
 import { Users, FileCode, X } from 'lucide-react';
+import { UserAvatar } from '../components/common/UserAvatar';
 
 export const PresencePanel: React.FC = () => {
   const { presence, togglePresencePanel } = useAppStore();
@@ -52,10 +53,8 @@ export const PresencePanel: React.FC = () => {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="relative">
-                      <div className="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[9px] font-bold text-zinc-200">
-                        {member.avatar || member.name[0]}
-                      </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 ring-1 ring-zinc-950" />
+                      <UserAvatar name={member.name} avatar={member.avatar} size="sm" />
+                      <span className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 ring-1 ring-zinc-950 animate-pulse" />
                     </div>
                     <span className="text-xs font-medium text-zinc-200 truncate">
                       {member.name}
@@ -94,9 +93,7 @@ export const PresencePanel: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-5 h-5 rounded-full bg-zinc-800/60 border border-white/[0.04] flex items-center justify-center text-[9px] text-zinc-500">
-                        {member.avatar || member.name[0]}
-                      </div>
+                      <UserAvatar name={member.name} avatar={member.avatar} size="sm" className="opacity-50 grayscale" />
                       <span className="text-xs text-zinc-400 truncate">
                         {member.name}
                       </span>
