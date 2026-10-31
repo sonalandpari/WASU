@@ -45,16 +45,18 @@ export const Header: React.FC = () => {
     setTimeout(() => setCopiedRoom(false), 2000);
   };
 
-  const onlineMembers = presence.filter((p) => p.online);
+  const onlineMembers = Array.isArray(presence) ? presence.filter((p) => p && p.online) : [];
 
   const navItems: { id: ActiveTab; label: string; icon: React.ElementType; badge?: number }[] = [
-    { id: 'activity', label: 'Timeline', icon: Activity, badge: events.length },
+    { id: 'activity', label: 'Timeline', icon: Activity, badge: Array.isArray(events) ? events.length : 0 },
     { id: 'architecture', label: 'Architecture', icon: Network },
-    { id: 'discussions', label: 'Discussions', icon: MessageSquareCode, badge: discussions.length },
+    { id: 'discussions', label: 'Discussions', icon: MessageSquareCode, badge: Array.isArray(discussions) ? discussions.length : 0 },
     { id: 'reports', label: 'Reports', icon: FileBarChart },
   ];
 
-  const directoryBasename = workspacePath ? workspacePath.split('/').filter(Boolean).pop() : 'Hackathon';
+  const directoryBasename = (workspacePath && typeof workspacePath === 'string')
+    ? workspacePath.split('/').filter(Boolean).pop() || 'Hackathon'
+    : 'Hackathon';
 
   return (
     <div className="flex flex-col border-b border-zinc-800/80 bg-zinc-950 select-none z-20 shrink-0">
@@ -127,12 +129,12 @@ export const Header: React.FC = () => {
                     key={m.id}
                     className="w-4 h-4 rounded-full bg-zinc-700 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-zinc-200"
                   >
-                    {m.avatar || m.name[0]}
+                    {m.avatar || m.name?.[0]?.toUpperCase() || 'U'}
                   </div>
                 ))
               ) : (
                 <div className="w-4 h-4 rounded-full bg-zinc-700 border border-zinc-900 flex items-center justify-center text-[8px] font-bold text-zinc-200">
-                  {currentUser.avatar || currentUser.name[0]}
+                  {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
                 </div>
               )}
             </div>
@@ -193,11 +195,11 @@ export const Header: React.FC = () => {
         {/* Left: Who Am I + Directory + Repo */}
         <div className="flex items-center gap-3 shrink-0">
           {/* Developer Identity */}
-          <div className="flex items-center gap-1.5 text-zinc-300" title={`Logged in as ${currentUser.name}`}>
+          <div className="flex items-center gap-1.5 text-zinc-300" title={`Logged in as ${currentUser?.name || 'Developer'}`}>
             <div className="w-3.5 h-3.5 rounded-full bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-[9px] text-indigo-300 font-bold">
-              {currentUser.avatar || currentUser.name[0]}
+              {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
             </div>
-            <span className="font-sans font-medium text-xs text-zinc-200">{currentUser.name}</span>
+            <span className="font-sans font-medium text-xs text-zinc-200">{currentUser?.name || 'Developer'}</span>
           </div>
 
           <div className="h-3 w-px bg-zinc-800" />

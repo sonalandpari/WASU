@@ -158,13 +158,13 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ event }) => {
                 : 'bg-zinc-800 text-zinc-200 border-zinc-700'
             }`}
           >
-            {event.userAvatar || event.userName[0]}
+            {event?.userAvatar || event?.userName?.[0]?.toUpperCase() || 'G'}
           </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-semibold text-zinc-100">
-                {event.userName}
+                {event?.userName || 'Developer'}
               </span>
 
               <div

@@ -36,7 +36,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-aurora-bg text-aurora-textPrimary font-sans overflow-hidden">
+    <div className="flex flex-col h-screen w-screen bg-zinc-950 text-zinc-100 font-sans overflow-hidden">
       {/* Top Minimal Header */}
       <Header />
 
@@ -44,7 +44,7 @@ export const App: React.FC = () => {
       <GlobalBanners />
 
       {/* Main Dynamic Workspace */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-aurora-bg">
+      <main className="flex-1 flex flex-col overflow-hidden bg-zinc-950">
         {renderActiveTab()}
       </main>
 

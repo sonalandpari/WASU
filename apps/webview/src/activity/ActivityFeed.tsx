@@ -44,7 +44,9 @@ export const ActivityFeed: React.FC = () => {
   // Group consecutive file saves by the same user & file within short intervals
   const groupedEvents = useMemo(() => {
     const result: ProjectEvent[] = [];
-    events.forEach((curr) => {
+    const eventList = Array.isArray(events) ? events : [];
+    eventList.forEach((curr) => {
+      if (!curr) return;
       if (curr.type === 'FILE_SAVED' && result.length > 0) {
         const prev = result[result.length - 1];
         if (
@@ -67,11 +69,12 @@ export const ActivityFeed: React.FC = () => {
 
   const filteredEvents = useMemo(() => {
     return groupedEvents.filter((item) => {
+      if (!item) return false;
       // Search filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchesDesc = item.description.toLowerCase().includes(q);
-        const matchesUser = item.userName.toLowerCase().includes(q);
+        const matchesDesc = (item.description || '').toLowerCase().includes(q);
+        const matchesUser = (item.userName || '').toLowerCase().includes(q);
         const matchesFile = item.metadata?.file?.toLowerCase().includes(q) || false;
         const matchesBranch = item.metadata?.branch?.toLowerCase().includes(q) || false;
         if (!matchesDesc && !matchesUser && !matchesFile && !matchesBranch) return false;
@@ -144,7 +147,7 @@ export const ActivityFeed: React.FC = () => {
           </div>
 
           {/* Member filter (if presence available) */}
-          {presence.length > 0 && (
+          {Array.isArray(presence) && presence.length > 0 && (
             <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-md px-2 py-1">
               <User className="w-3 h-3 text-zinc-400" />
               <select
@@ -192,7 +195,7 @@ export const ActivityFeed: React.FC = () => {
       <div className="p-2.5 border-t border-zinc-800/80 bg-zinc-900/80 backdrop-blur shrink-0">
         <form onSubmit={handleSendChat} className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-200 shrink-0">
-            {currentUser.avatar || currentUser.name[0]}
+            {currentUser?.avatar || currentUser?.name?.[0]?.toUpperCase() || 'D'}
           </div>
 
           <div className="relative flex-1">

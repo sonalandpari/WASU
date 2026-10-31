@@ -101,96 +101,122 @@ export class MessageRouter {
   }
 
   private async sendInitialState(): Promise<void> {
-    const config = vscode.workspace.getConfiguration("rero");
-    const configuredProjectId = config.get<string>("projectId");
-    const configuredUserName = config.get<string>("userName");
+    try {
+      const config = vscode.workspace.getConfiguration("rero");
+      const configuredProjectId = config.get<string>("projectId");
+      const configuredUserName = config.get<string>("userName");
 
-    const userInfo = await GitCli.getUserInfo(this.workspaceRoot);
-    const activeUserName = configuredUserName || userInfo.name || "Developer";
-    const userEmail = userInfo.email;
+      const userInfo = await GitCli.getUserInfo(this.workspaceRoot);
+      const activeUserName = configuredUserName || userInfo.name || "Developer";
+      const userEmail = userInfo.email;
 
-    const currentBranch = await GitCli.getCurrentBranch(this.workspaceRoot);
-    const repoKey = await GitCli.getRepositoryKey(this.workspaceRoot);
-    const roomCode = configuredProjectId || (await GitCli.getRoomCode(this.workspaceRoot));
-    const repositoryName = repoKey.includes("/")
-      ? repoKey.split("/").slice(-2).join("/")
-      : path.basename(this.workspaceRoot);
-    const workspacePath = this.workspaceRoot;
+      const currentBranch = await GitCli.getCurrentBranch(this.workspaceRoot);
+      const repoKey = await GitCli.getRepositoryKey(this.workspaceRoot);
+      const roomCode = configuredProjectId || (await GitCli.getRoomCode(this.workspaceRoot));
+      const repositoryName = repoKey.includes("/")
+        ? repoKey.split("/").slice(-2).join("/")
+        : path.basename(this.workspaceRoot);
+      const workspacePath = this.workspaceRoot;
 
-    // Fetch real recent commits from local git repository history
-    const recentCommits = await GitCli.getRecentCommits(this.workspaceRoot, 12, repoKey);
-    const realEvents: ProjectEvent[] = recentCommits.map((c) => {
-      const commitTime = c.commitTimestamp ? new Date(c.commitTimestamp) : new Date();
-      return {
-        id: `evt-${c.shortHash}`,
-        projectId: roomCode,
-        type: "COMMIT_CREATED",
-        userId: c.authorName?.toLowerCase().replace(/\s+/g, "-") || "git-user",
-        userName: c.authorName || "Git",
-        userAvatar: c.authorName ? c.authorName[0].toUpperCase() : "G",
-        timestamp: commitTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        description: c.message,
-        metadata: {
-          commitHash: c.commitHash,
-          commitMessage: c.message,
-          file: c.changedPaths[0],
-          stagedFiles: c.changedPaths,
+      // Fetch real recent commits from local git repository history
+      const recentCommits = await GitCli.getRecentCommits(this.workspaceRoot, 12, repoKey);
+      const realEvents: ProjectEvent[] = recentCommits.map((c) => {
+        const commitTime = c.commitTimestamp ? new Date(c.commitTimestamp) : new Date();
+        return {
+          id: `evt-${c.shortHash}`,
+          projectId: roomCode,
+          type: "COMMIT_CREATED",
+          userId: c.authorName?.toLowerCase().replace(/\s+/g, "-") || "git-user",
+          userName: c.authorName || "Git",
+          userAvatar: c.authorName ? c.authorName[0].toUpperCase() : "G",
+          timestamp: commitTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          description: c.message,
+          metadata: {
+            commitHash: c.commitHash,
+            commitMessage: c.message,
+            file: c.changedPaths[0],
+            stagedFiles: c.changedPaths,
+          },
+        };
+      });
+
+      const activePresence: UserPresence[] = [
+        {
+          id: `user-${activeUserName.toLowerCase().replace(/\s+/g, "-")}`,
+          name: activeUserName,
+          avatar: activeUserName[0].toUpperCase(),
+          online: true,
+          activeFile: vscode.window.activeTextEditor?.document.fileName
+            ? path.relative(this.workspaceRoot, vscode.window.activeTextEditor.document.fileName)
+            : undefined,
+          lastActive: "Active now",
         },
-      };
-    });
+      ];
 
-    const activePresence: UserPresence[] = [
-      {
-        id: `user-${activeUserName.toLowerCase().replace(/\s+/g, "-")}`,
-        name: activeUserName,
-        avatar: activeUserName[0].toUpperCase(),
-        online: true,
-        activeFile: vscode.window.activeTextEditor?.document.fileName
-          ? path.relative(this.workspaceRoot, vscode.window.activeTextEditor.document.fileName)
-          : undefined,
-        lastActive: "Active now",
-      },
-    ];
-
-    const initialState: WebviewInitialState = {
-      projectId: roomCode,
-      projectName: "RERO",
-      currentBranch,
-      workspacePath,
-      repositoryName,
-      roomCode,
-      currentUser: {
-        id: `user-${activeUserName.toLowerCase().replace(/\s+/g, "-")}`,
-        name: activeUserName,
-        email: userEmail,
-        avatar: activeUserName[0].toUpperCase(),
-      },
-      connectionStatus: "connected",
-      presence: activePresence,
-      events: realEvents,
-      discussions: [],
-      graph: null,
-    };
-
-    this.postMessageToWebview({
-      type: "INIT_STATE",
-      payload: initialState,
-    });
-
-    this.postMessageToWebview({
-      type: "GIT_INFO_CHANGED",
-      payload: {
-        branch: currentBranch,
+      const initialState: WebviewInitialState = {
+        projectId: roomCode,
+        projectName: "RERO",
+        currentBranch,
+        workspacePath,
         repositoryName,
-      },
-    });
+        roomCode,
+        currentUser: {
+          id: `user-${activeUserName.toLowerCase().replace(/\s+/g, "-")}`,
+          name: activeUserName,
+          email: userEmail,
+          avatar: activeUserName[0].toUpperCase(),
+        },
+        connectionStatus: "connected",
+        presence: activePresence,
+        events: realEvents,
+        discussions: [],
+        graph: null,
+      };
 
-    this.postMessageToWebview({
-      type: "CONNECTION_STATUS_CHANGED",
-      payload: {
-        status: "connected",
-      },
-    });
+      this.postMessageToWebview({
+        type: "INIT_STATE",
+        payload: initialState,
+      });
+
+      this.postMessageToWebview({
+        type: "GIT_INFO_CHANGED",
+        payload: {
+          branch: currentBranch,
+          repositoryName,
+        },
+      });
+
+      this.postMessageToWebview({
+        type: "CONNECTION_STATUS_CHANGED",
+        payload: {
+          status: "connected",
+        },
+      });
+    } catch (err: any) {
+      console.error("[RERO MessageRouter] Error building initial state:", err);
+      // Safe fallback state so webview never hangs or goes black
+      this.postMessageToWebview({
+        type: "INIT_STATE",
+        payload: {
+          projectId: "WASU",
+          projectName: "RERO",
+          currentBranch: "main",
+          workspacePath: this.workspaceRoot,
+          repositoryName: path.basename(this.workspaceRoot) || "WASU",
+          roomCode: "WASU",
+          currentUser: {
+            id: "user-dev",
+            name: "Developer",
+            avatar: "D",
+          },
+          connectionStatus: "connected",
+          presence: [],
+          events: [],
+          discussions: [],
+          graph: null,
+        },
+      });
+    }
   }
 
   private async openWorkspaceFile(filePath: string, line?: number): Promise<void> {
