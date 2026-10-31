@@ -123,13 +123,36 @@ export class GitCli {
   }
 
   /**
+   * Validates whether a commit reference is safe from flag injection (alphanumeric git revision or SHA, no leading dash).
+   */
+  static isValidCommitHash(hash?: string): boolean {
+    if (!hash) return false;
+    const clean = hash.trim();
+    if (clean.startsWith("-") || clean.includes(" ")) {
+      return false;
+    }
+    // Must be hexadecimal SHA (4 to 64 chars) or valid revision keyword (e.g. HEAD, HEAD~1)
+    return /^(HEAD([~^]\d+)*|[a-fA-F0-9]{4,64})$/.test(clean);
+  }
+
+  /**
    * Fetches specific commit metadata and changed files.
    */
   static async getCommit(cwd: string, commitHash: string, repositoryKey?: string): Promise<CommitPayload | null> {
+    const cleanHash = commitHash ? commitHash.trim() : "";
+    if (!this.isValidCommitHash(cleanHash)) {
+      console.warn(`[RERO GitCli] Invalid commit hash rejected: "${commitHash}"`);
+      return null;
+    }
+
     try {
       const repoKey = repositoryKey || (await this.getRepositoryKey(cwd));
       const format = "%H%x00%h%x00%an%x00%ae%x00%aI%x00%s";
-      const { stdout } = await execFileAsync("git", ["log", "-1", `--pretty=format:${format}`, "--name-only", commitHash], { cwd });
+      const { stdout } = await execFileAsync(
+        "git",
+        ["log", "-1", `--pretty=format:${format}`, "--name-only", "--", cleanHash],
+        { cwd }
+      );
 
       return parseGitLogOutput(stdout, repoKey);
     } catch {

@@ -221,9 +221,20 @@ export class MessageRouter {
 
   private async openWorkspaceFile(filePath: string, line?: number): Promise<void> {
     try {
+      // Normalize and resolve path safely within workspaceRoot
       const fullPath = path.isAbsolute(filePath)
-        ? filePath
+        ? path.resolve(filePath)
         : path.resolve(this.workspaceRoot, filePath);
+
+      const normalizedRoot = path.resolve(this.workspaceRoot);
+      const relative = path.relative(normalizedRoot, fullPath);
+      const isContained = !relative.startsWith("..") && !path.isAbsolute(relative);
+
+      if (!isContained) {
+        console.warn(`[RERO MessageRouter] Blocked file access outside workspace: ${filePath}`);
+        vscode.window.showWarningMessage(`RERO: Access denied. Cannot open file outside workspace: ${filePath}`);
+        return;
+      }
 
       const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
       const editor = await vscode.window.showTextDocument(doc, { preview: true });

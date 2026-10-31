@@ -33,7 +33,7 @@ describe("GitRevisionContentProvider", () => {
 
     const content = await provider.provideTextDocumentContent(uri);
     expect(content.length).toBeGreaterThan(0);
-    expect(content).toContain("ContextFlow");
+    expect(content).toMatch(/RERO|ContextFlow/);
   });
 });
 
@@ -53,5 +53,17 @@ describe("DiffViewer Navigation", () => {
     // Initial commit hash in this repo: d8908b62fe1c472c941b072191523917e1bb7765
     const rootParent = await viewer.getParentCommitHash("d8908b62fe1c472c941b072191523917e1bb7765");
     expect(rootParent).toBe("EMPTY_TREE");
+  });
+
+  it("defends against git option injection in getParentCommitHash", async () => {
+    const maliciousHash = "--output=/tmp/pwn";
+    const result = await viewer.getParentCommitHash(maliciousHash);
+    expect(result).toBe("EMPTY_TREE");
+  });
+
+  it("defends against git option injection in openCommitDiff", async () => {
+    const maliciousHash = "--exec=calc.exe";
+    const result = await viewer.openCommitDiff(maliciousHash);
+    expect(result).toBe(false);
   });
 });

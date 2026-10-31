@@ -98,8 +98,8 @@ export class ReroWebviewProvider implements vscode.WebviewViewProvider {
     htmlContent = htmlContent.replace(/src="\/assets\/index\.js"/g, `src="${scriptUri}"`);
     htmlContent = htmlContent.replace(/href="\/assets\/index\.css"/g, `href="${styleUri}"`);
 
-    // Inject Content Security Policy
-    const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; script-src ${webview.cspSource} 'unsafe-inline' 'unsafe-eval'; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; connect-src ${webview.cspSource} ws://localhost:* http://localhost:* https:;">`;
+    // Inject Content Security Policy (strict script security, unsafe-eval removed)
+    const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; script-src ${webview.cspSource} 'unsafe-inline'; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; connect-src ${webview.cspSource} ws://localhost:* http://localhost:* https:;">`;
 
     htmlContent = htmlContent.replace("<head>", `<head>\n    ${csp}`);
 

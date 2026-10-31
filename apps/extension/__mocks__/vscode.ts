@@ -68,6 +68,7 @@ export const workspace = {
   workspaceFolders: [],
   registerTextDocumentContentProvider: jest.fn(() => ({ dispose: jest.fn() })),
   onDidSaveTextDocument: jest.fn(() => ({ dispose: jest.fn() })),
+  openTextDocument: jest.fn(),
   getConfiguration: jest.fn(() => ({
     get: jest.fn((key, def) => def),
   })),

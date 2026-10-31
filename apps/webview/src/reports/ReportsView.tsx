@@ -11,7 +11,10 @@ import {
   GitCommit,
   Layers,
   Users,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
+import { generateGemmaSummary } from '../services/gemmaService';
 
 export const ReportsView: React.FC = () => {
   const {
@@ -32,6 +35,28 @@ export const ReportsView: React.FC = () => {
 
   const commitEvents = events.filter((e) => e.type === 'COMMIT_CREATED');
   const distinctContributors = Array.from(new Set(events.map((e) => e.userName))).filter(Boolean);
+
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateAI = async () => {
+    setIsGenerating(true);
+    try {
+      const summary = await generateGemmaSummary({
+        projectName: repositoryName || projectName || 'RERO',
+        branch: currentBranch || 'main',
+        activeDevelopers: distinctContributors.length > 0 ? distinctContributors : [currentUser.name || 'Wafiq'],
+        commits: commitEvents.map((e) => ({
+          hash: e.metadata?.commitHash?.slice(0, 7) || 'HEAD',
+          message: e.description,
+          author: e.userName,
+        })),
+      });
+      setAiSummary(summary);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const commitsCount = commitEvents.length > 0 ? commitEvents.length : 5;
   const filesChangedCount = commitEvents.reduce((acc, curr) => acc + (curr.metadata?.stagedFiles?.length || 1), 0);
@@ -243,6 +268,49 @@ export const ReportsView: React.FC = () => {
               <span className="text-sm font-semibold text-zinc-200 mt-1 block truncate">
                 {currentUser.name}
               </span>
+            </div>
+          </div>
+
+          {/* Gemma 4 AI Intelligence Digest */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-zinc-950 border border-indigo-500/30 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+                  <Sparkles className="w-4 h-4 text-indigo-400" />
+                </span>
+                <div>
+                  <h4 className="text-xs font-bold text-zinc-100 uppercase tracking-wide flex items-center gap-1.5">
+                    <span>Gemma 4</span>
+                    <span className="px-1.5 py-0.2 rounded text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                      AI Sprint Digest
+                    </span>
+                  </h4>
+                  <span className="text-[10px] text-zinc-400">Context-aware repository synthesis</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleGenerateAI}
+                disabled={isGenerating}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all disabled:opacity-50 active:scale-95 cursor-pointer"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Synthesizing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Generate AI Brief</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="text-xs text-zinc-300 font-mono whitespace-pre-line bg-zinc-950/60 p-3 rounded-lg border border-white/5 leading-relaxed">
+              {aiSummary || "Click 'Generate AI Brief' to synthesize active branch commits, developer diffs, and architectural risks with Gemma 4."}
             </div>
           </div>
 

@@ -66,4 +66,18 @@ describe("Webview Message Router", () => {
     expect(mockDiffViewer.openCommitDiff).not.toHaveBeenCalled();
     expect(vscode.window.showWarningMessage).toHaveBeenCalled();
   });
+
+  it("blocks path traversal attempts in OPEN_FILE", async () => {
+    await router.handleMessage({
+      type: "OPEN_FILE",
+      payload: {
+        path: "../../etc/passwd",
+      },
+    } as any);
+
+    expect(vscode.workspace.openTextDocument).not.toHaveBeenCalled();
+    expect(vscode.window.showWarningMessage).toHaveBeenCalledWith(
+      expect.stringContaining("Access denied")
+    );
+  });
 });

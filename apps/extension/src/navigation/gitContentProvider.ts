@@ -62,6 +62,13 @@ export class GitRevisionContentProvider implements vscode.TextDocumentContentPro
       return "";
     }
 
+    // Defensive check: ref must not start with a dash and must be alphanumeric/standard git revision chars
+    const cleanRef = ref.trim();
+    if (cleanRef.startsWith("-") || !/^[a-zA-Z0-9_\-~^./]+$/.test(cleanRef)) {
+      console.warn(`[RERO GitProvider] Rejected invalid git ref: "${ref}"`);
+      return "";
+    }
+
     try {
       // Compute relative path from workspace root
       let relativePath = filePath;
@@ -71,14 +78,20 @@ export class GitRevisionContentProvider implements vscode.TextDocumentContentPro
       // Normalize slashes for git
       relativePath = relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
 
-      const { stdout } = await execFileAsync("git", ["show", `${ref}:${relativePath}`], {
+      // Ensure relativePath doesn't escape repository tree
+      if (relativePath.startsWith("../") || relativePath === "..") {
+        console.warn(`[RERO GitProvider] Blocked path traversal attempt: "${filePath}"`);
+        return "";
+      }
+
+      const { stdout } = await execFileAsync("git", ["show", `${cleanRef}:${relativePath}`], {
         cwd: this.workspaceRoot,
         maxBuffer: 10 * 1024 * 1024, // 10MB limit
       });
 
       return stdout;
     } catch (err: any) {
-      console.warn(`[RERO GitProvider] Unable to get ${ref}:${filePath}:`, err.message);
+      console.warn(`[RERO GitProvider] Unable to get ${cleanRef}:${filePath}:`, err.message);
       return "";
     }
   }

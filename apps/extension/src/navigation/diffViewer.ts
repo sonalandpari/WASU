@@ -22,8 +22,13 @@ export class DiffViewer {
    * Resolves the parent commit hash. Returns "EMPTY_TREE" if this is the root commit.
    */
   public async getParentCommitHash(commitHash: string): Promise<string> {
+    const cleanHash = commitHash ? commitHash.trim() : "";
+    if (!GitCli.isValidCommitHash(cleanHash)) {
+      return "EMPTY_TREE";
+    }
+
     try {
-      const { stdout } = await execFileAsync("git", ["rev-parse", "--verify", `${commitHash}~1`], {
+      const { stdout } = await execFileAsync("git", ["rev-parse", "--verify", `${cleanHash}~1`], {
         cwd: this.workspaceRoot,
       });
       return stdout.trim();
@@ -37,12 +42,17 @@ export class DiffViewer {
    * Opens a side-by-side Git diff for a commit in VS Code.
    */
   public async openCommitDiff(commitHash: string, targetFilePath?: string): Promise<boolean> {
-    if (!commitHash || commitHash.trim().length === 0) {
+    const cleanHash = commitHash ? commitHash.trim() : "";
+    if (!cleanHash) {
       vscode.window.showErrorMessage("RERO: No commit hash provided.");
       return false;
     }
 
-    const cleanHash = commitHash.trim();
+    if (!GitCli.isValidCommitHash(cleanHash)) {
+      vscode.window.showErrorMessage(`RERO: Invalid commit hash: ${cleanHash}`);
+      return false;
+    }
+
     let selectedFile = targetFilePath;
 
     // If no target file provided, find changed files in commit
